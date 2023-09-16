@@ -171,7 +171,7 @@
                                             <div class="card-body">
 
                                                 <div>
-                                                    <form action="upload.php" class="dropzone" id="awsDropzone">
+                                                    <form action="upload_test.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
                                                         <div class="fallback">
                                                             <input name="file" type="file" multiple="multiple">
                                                         </div>
