@@ -10,7 +10,7 @@ if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
     $targetFile = $targetDir . basename($_FILES["file"]["name"]);
 
     // Move o arquivo para a pasta 'uploads'
-    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) { // A função move_uploaded_file() é usada para mover um arquivo enviado (temporariamente armazenado em $_FILES["file"]["tmp_name"]) para o destino especificado em $targetFile.
         echo "Arquivo enviado e movido para 'uploads/' com sucesso.";
 
         // Agora, vamos carregar o arquivo para a AWS aqui...
