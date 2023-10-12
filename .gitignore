@@ -1,0 +1,3 @@
+# Ignorar arquivos de dependências gerados pelo Composer
+/vendor/
+Admin/layouts/config.php

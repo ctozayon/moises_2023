@@ -1,6 +1,10 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+# Criei uma variável chamada empresas e atribua a ela um array com os nomes Cria, Faza e Arti e projetos fictícios
+<?php $empresas = array("Cria", "Faza", "Arti"); 
+      $projetos = array("Projeto1", "Projeto2", "Projeto3")?>
+
 <head>
 
     <title>Upload de Novos Arquivos</title>
@@ -92,27 +96,17 @@
                                             <form>
                                             <div class="col-md-6">
                                                 <div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios1" checked>
-                                                        <label class="form-check-label" for="formRadios1">
-                                                            Cria
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios2">
-                                                        <label class="form-check-label" for="formRadios2">
-                                                            Faza
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios3">
-                                                        <label class="form-check-label" for="formRadios3">
-                                                            Arti
-                                                        </label>
-                                                    </div>
+                                                    <?php
+                                                    // Loop para exibir os nomes das empresas   
+                                                    foreach ($empresas as $empresa) {
+                                                        echo "<div class='form-check mb-3'>";
+                                                        echo "<input class='form-check-input' type='radio' name='formRadios' id='formRadios1' checked>";
+                                                        echo "<label class='form-check-label' for='formRadios1'>";
+                                                        echo $empresa;
+                                                        echo "</label>";
+                                                        echo "</div>";
+                                                    }
+                                                    ?>
                                                 </div>
                                             </div>
                                                 <!--
