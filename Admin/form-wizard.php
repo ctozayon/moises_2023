@@ -98,15 +98,14 @@
                                                 <div>
                                                     <?php
                                                     // Loop para exibir os nomes das empresas   
-                                                    foreach ($empresas as $empresa) {
-                                                        echo "<div class='form-check mb-3'>";
-                                                        echo "<input class='form-check-input' type='radio' name='formRadios' id='formRadios1' checked>";
-                                                        echo "<label class='form-check-label' for='formRadios1'>";
-                                                        echo $empresa;
-                                                        echo "</label>";
-                                                        echo "</div>";
-                                                    }
-                                                    ?>
+                                                    foreach ($empresas as $empresa) {?>
+                                                        <div class='form-check mb-3'>
+                                                            <input class='form-check-input' type='radio' name='formRadios' id='formRadios1' checked>
+                                                            <label class='form-check-label' for='formRadios1'>
+                                                            <?php echo $empresa ?> 
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                                 <!--
