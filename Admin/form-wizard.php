@@ -100,22 +100,22 @@
                                             </div>
                                             
                                             <div class="col-md-6">
-                                                <form method="post">
+                                                <form id="empresaForm">
                                                     <div>
                                                         <?php
                                                         // Loop para exibir os nomes das empresas   
                                                         foreach ($empresas as $empresa) {?>
                                                             <div class='form-check mb-3'>
-                                                                <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios' value='<?php echo $empresa; ?>'<?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
-                                                                <label class='form-check-label' for='formRadios<?php echo $empresa; ?>'>
+                                                                <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa; ?>' value='<?php echo $empresa; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
+                                                                <label class='form-check-label' for='formRadios<?php echo $empresa; ?>' data-projetos='<?php echo json_encode($empresas_projetos[$empresa]); ?>'>
                                                                     <?php echo $empresa; ?>
                                                                 </label>
                                                             </div>
                                                         <?php } ?>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary"> Selecionar projeto </button></b>
                                                 </form>
-                                            </div><br>
+                                            </div>
+                                            <br>
                                             
                                             <div class="col-md-6">
                                                 <?php
@@ -615,6 +615,34 @@
 <!-- /Right-bar -->
 
 <!-- JAVASCRIPT -->
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Evento de mudança no formulário
+        $('#empresaForm input[type=radio]').change(function() {
+            // Obtém os projetos associados à empresa selecionada
+            var projetos = $(this).next('label').data('projetos');
+
+            // Atualiza a lista de projetos no dropdown
+            updateProjetosDropdown(projetos);
+        });
+
+        // Função para atualizar a lista de projetos no dropdown
+        function updateProjetosDropdown(projetos) {
+            var projetosDropdown = $('#projetos');
+            projetosDropdown.empty(); // Limpa a lista de projetos
+
+            // Adiciona os projetos ao dropdown
+            $.each(projetos, function(index, projeto) {
+                projetosDropdown.append($('<option>', {
+                    value: projeto,
+                    text: projeto
+                }));
+            });
+        }
+    });
+</script>
 
 <?php include 'layouts/vendor-scripts.php'; ?>
 
