@@ -100,7 +100,7 @@
                                             </div>
                                             
                                             <div class="col-md-6">
-                                                <form id="empresaForm">
+                                                <form id="empresaForm" method="post">
                                                     <div>
                                                         <?php
                                                         // Loop para exibir os nomes das empresas   
@@ -116,32 +116,64 @@
                                                 </form>
                                             </div>
                                             <br>
-                                            
+
                                             <div class="col-md-6">
-                                                <?php
-                                                // Verifica se uma empresa foi selecionada
-                                                if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
-                                                    $selectedEmpresa = $_POST['selectedEmpresa'];
+                                                <label for="projetos">Selecione o projeto:</label>
+                                                <select class="form-select" id="projetos" name="projetos">
+                                                    <?php
+                                                    // Verifica se uma empresa foi selecionada
+                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
+                                                        // Obtém os projetos correspondentes à empresa selecionada
+                                                        $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
 
-                                                    // Obtém os projetos correspondentes à empresa selecionada
-                                                    $projetos = $empresas_projetos[$selectedEmpresa];
-
-                                                    // Exibe a lista de projetos
-                                                    echo '<label for="projetos">Selecione o projeto:</label>';
-                                                    echo '<select class="form-select" id="projetos" name="projetos">';
-                                                    
-                                                    foreach ($projetos as $projeto) {
-                                                        echo '<option value="' . $projeto . '">' . $projeto . '</option>';
+                                                        // Exibe a lista de projetos
+                                                        foreach ($projetos as $projeto) {
+                                                            echo '<option value="' . $projeto . '">' . $projeto . '</option>';
+                                                        }
+                                                    } else {
+                                                        // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                                        echo '<option value="">Selecione uma empresa primeiro</option>';
                                                     }
-
-                                                    echo '</select>';
-
-                                                } else {
-                                                    // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
-                                                    echo '<p>Selecione uma empresa primeiro.</p>';
-                                                }
-                                                ?>
+                                                    ?>
+                                                </select>
                                             </div>
+                                                <!--<div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="basicpill-firstname-input" class="form-label">First name</label>
+                                                            <input type="text" class="form-control" id="basicpill-firstname-input" placeholder="Enter Your First Name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="basicpill-lastname-input" class="form-label">Last name</label>
+                                                            <input type="text" class="form-control" id="basicpill-lastname-input" placeholder="Enter Your Last Name">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="basicpill-phoneno-input" class="form-label">Phone</label>
+                                                            <input type="text" class="form-control" id="basicpill-phoneno-input" placeholder="Enter your Phone No.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="basicpill-email-input" class="form-label">Email</label>
+                                                            <input type="email" class="form-control" id="basicpill-email-input" placeholder="Enter your email">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div class="mb-3">
+                                                            <label for="basicpill-address-input" class="form-label">Address</label>
+                                                            <textarea id="basicpill-address-input" class="form-control" rows="2" placeholder="Enter your Address"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
 
                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
                                                 <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
@@ -645,6 +677,37 @@
 </script>
 
 <?php include 'layouts/vendor-scripts.php'; ?>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Evento de mudança no formulário
+        $('#empresaForm input[type=radio]').change(function() {
+            // Obtém os projetos associados à empresa selecionada
+            var projetos = $(this).next('label').data('projetos');
+
+            // Atualiza a lista de projetos no dropdown
+            updateProjetosDropdown(projetos);
+
+            // Envie o formulário
+            $('#empresaForm').submit();
+        });
+
+        // Função para atualizar a lista de projetos no dropdown
+        function updateProjetosDropdown(projetos) {
+            var projetosDropdown = $('#projetos');
+            projetosDropdown.empty(); // Limpa a lista de projetos
+
+            // Adiciona os projetos ao dropdown
+            $.each(projetos, function(index, projeto) {
+                projetosDropdown.append($('<option>', {
+                    value: projeto,
+                    text: projeto
+                }));
+            });
+        }
+    });
+</script>
 
 <!-- twitter-bootstrap-wizard js -->
 <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
