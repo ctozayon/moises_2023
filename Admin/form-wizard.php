@@ -3,7 +3,12 @@
 
 # Criei uma variável chamada empresas e atribua a ela um array com os nomes Cria, Faza e Arti e projetos fictícios
 <?php $empresas = array("Cria", "Faza", "Arti"); 
-      $projetos = array("Projeto1", "Projeto2", "Projeto3")?>
+      $empresas_projetos = array(
+        'Cria' => array('Projeto1 Cria', 'Projeto2 Cria', 'Projeto3 Cria'),
+        'Faza' => array('Projeto1 Faza', 'Projeto2 Faza', 'Projeto3 Faza'),
+        'Arti' => array('Projeto1 Arti', 'Projeto2 Arti', 'Projeto3 Arti')
+    );
+?>
 
 <head>
 
@@ -93,61 +98,51 @@
                                                 <h5>Para qual cliente deseja fazer o upload?</h5>
                                                 <p class="card-title-desc">Selecione entre os clientes exibidos para enviar os arquivos para a pasta correta:</p>
                                             </div>
-                                            <form>
+                                            
                                             <div class="col-md-6">
-                                                <div>
-                                                    <?php
-                                                    // Loop para exibir os nomes das empresas   
-                                                    foreach ($empresas as $empresa) {?>
-                                                        <div class='form-check mb-3'>
-                                                            <input class='form-check-input' type='radio' name='formRadios' id='formRadios1' checked>
-                                                            <label class='form-check-label' for='formRadios1'>
-                                                            <?php echo $empresa ?> 
-                                                            </label>
-                                                        </div>
-                                                    <?php } ?>
-                                                </div>
-                                            </div>
-                                                <!--
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-firstname-input" class="form-label">First name</label>
-                                                            <input type="text" class="form-control" id="basicpill-firstname-input" placeholder="Enter Your First Name">
-                                                        </div>
+                                                <form method="post">
+                                                    <div>
+                                                        <?php
+                                                        // Loop para exibir os nomes das empresas   
+                                                        foreach ($empresas as $empresa) {?>
+                                                            <div class='form-check mb-3'>
+                                                                <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios' value='<?php echo $empresa; ?>'<?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
+                                                                <label class='form-check-label' for='formRadios<?php echo $empresa; ?>'>
+                                                                    <?php echo $empresa; ?>
+                                                                </label>
+                                                            </div>
+                                                        <?php } ?>
                                                     </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-lastname-input" class="form-label">Last name</label>
-                                                            <input type="text" class="form-control" id="basicpill-lastname-input" placeholder="Enter Your Last Name">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    <button type="submit" class="btn btn-primary"> Selecionar projeto </button></b>
+                                                </form>
+                                            </div><br>
+                                            
+                                            <div class="col-md-6">
+                                                <?php
+                                                // Verifica se uma empresa foi selecionada
+                                                if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
+                                                    $selectedEmpresa = $_POST['selectedEmpresa'];
 
-                                                <div class="row">
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-phoneno-input" class="form-label">Phone</label>
-                                                            <input type="text" class="form-control" id="basicpill-phoneno-input" placeholder="Enter your Phone No.">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-email-input" class="form-label">Email</label>
-                                                            <input type="email" class="form-control" id="basicpill-email-input" placeholder="Enter your email">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-lg-12">
-                                                        <div class="mb-3">
-                                                            <label for="basicpill-address-input" class="form-label">Address</label>
-                                                            <textarea id="basicpill-address-input" class="form-control" rows="2" placeholder="Enter your Address"></textarea>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                -->
-                                            </form>
+                                                    // Obtém os projetos correspondentes à empresa selecionada
+                                                    $projetos = $empresas_projetos[$selectedEmpresa];
+
+                                                    // Exibe a lista de projetos
+                                                    echo '<label for="projetos">Selecione o projeto:</label>';
+                                                    echo '<select class="form-select" id="projetos" name="projetos">';
+                                                    
+                                                    foreach ($projetos as $projeto) {
+                                                        echo '<option value="' . $projeto . '">' . $projeto . '</option>';
+                                                    }
+
+                                                    echo '</select>';
+
+                                                } else {
+                                                    // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                                    echo '<p>Selecione uma empresa primeiro.</p>';
+                                                }
+                                                ?>
+                                            </div>
+
                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
                                                 <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
                                                             class="bx bx-chevron-right ms-1"></i></a></li>
