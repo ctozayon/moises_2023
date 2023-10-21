@@ -1,4 +1,5 @@
 <?php
+$language['Projetos'] = "Projetos";
 $language['Mosyni'] = "Mosyni";
 $language['Menu'] = "Menu";
 $language['Dashboard'] = "Dashboard";

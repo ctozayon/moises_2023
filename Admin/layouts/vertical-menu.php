@@ -314,13 +314,13 @@
                             </a>
                         </li> -->
 
-                        <!-- <li>
-                            <a href="form-uploads.php">
+                       <li>
+                            <a href="form-cadastrar_projetos.php">
                                 <span data-key="t-form-upload">
-                                    //?php echo $language["File_Upload"]; ?>
+                                    <?php echo $language["Projetos"]; ?>
                                 </span>
                             </a>
-                        </li> -->
+                        </li>
 
                         <li>
                             <a href="form-wizard.php">
