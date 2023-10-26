@@ -1,6 +1,15 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+# Criei uma variável chamada empresas e atribua a ela um array com os nomes Cria, Faza e Arti e projetos fictícios
+<?php $empresas = array("Cria", "Faza", "Arti"); 
+      $empresas_projetos = array(
+        'Cria' => array('Projeto1 Cria', 'Projeto2 Cria', 'Projeto3 Cria'),
+        'Faza' => array('Projeto1 Faza', 'Projeto2 Faza', 'Projeto3 Faza'),
+        'Arti' => array('Projeto1 Arti', 'Projeto2 Arti', 'Projeto3 Arti')
+    );
+?>
+
 <head>
 
     <title>Upload de Novos Arquivos</title>
@@ -89,34 +98,44 @@
                                                 <h5>Para qual cliente deseja fazer o upload?</h5>
                                                 <p class="card-title-desc">Selecione entre os clientes exibidos para enviar os arquivos para a pasta correta:</p>
                                             </div>
-                                            <form>
+                                            
                                             <div class="col-md-6">
                                                 <div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios1" checked>
-                                                        <label class="form-check-label" for="formRadios1">
-                                                            Cria
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios2">
-                                                        <label class="form-check-label" for="formRadios2">
-                                                            Faza
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check mb-3">
-                                                        <input class="form-check-input" type="radio" name="formRadios"
-                                                            id="formRadios3">
-                                                        <label class="form-check-label" for="formRadios3">
-                                                            Arti
-                                                        </label>
-                                                    </div>
+                                                    <?php
+                                                    // Loop para exibir os nomes das empresas   
+                                                    foreach ($empresas as $empresa) {?>
+                                                        <div class='form-check mb-3'>
+                                                            <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa; ?>' value='<?php echo $empresa; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
+                                                            <label class='form-check-label' for='formRadios<?php echo $empresa; ?>' data-projetos='<?php echo json_encode($empresas_projetos[$empresa]); ?>'>
+                                                                <?php echo $empresa; ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
-                                                <!--
-                                                <div class="row">
+
+                                            <div class="col-md-6">
+                                                <label for="projetos">Selecione o projeto:</label>
+                                                <select class="form-select" id="projetos" name="projetos">
+                                                    <?php
+                                                    // Verifica se uma empresa foi selecionada
+                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
+                                                        // Obtém os projetos correspondentes à empresa selecionada
+                                                        $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
+
+                                                        // Exibe a lista de projetos
+                                                        foreach ($projetos as $projeto) {
+                                                            echo '<option value="' . $projeto . '">' . $projeto . '</option>';
+                                                        }
+                                                    } else {
+                                                        // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                                        echo '<option value="">Selecione uma empresa primeiro</option>';
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                                <!--<div class="row">
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="basicpill-firstname-input" class="form-label">First name</label>
@@ -152,9 +171,8 @@
                                                             <textarea id="basicpill-address-input" class="form-control" rows="2" placeholder="Enter your Address"></textarea>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                -->
-                                            </form>
+                                                </div>-->
+
                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
                                                 <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
                                                             class="bx bx-chevron-right ms-1"></i></a></li>
@@ -628,7 +646,95 @@
 
 <!-- JAVASCRIPT -->
 
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // ... (o mesmo código que acima)
+
+        // Adiciona evento de mudança nos rádios
+        var radios = document.querySelectorAll('input[type=radio][name=selectedEmpresa]');
+        radios.forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                var projetosLabel = this.nextElementSibling;
+                var projetos = projetosLabel.getAttribute('data-projetos');
+
+                // Atualiza a lista de projetos no dropdown
+                updateProjetosDropdown(projetos);
+
+                // Envia o formulário via AJAX
+                var formData = new FormData();
+                formData.append('selectedEmpresa', this.value);
+
+                var xhr = new XMLHttpRequest();
+                xhr.open('POST', window.location.href, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        // Lida com a resposta
+                        handleResponse(xhr.responseText);
+                    }
+                };
+                xhr.send(formData);
+            });
+        });
+
+        // Função para atualizar a lista de projetos no dropdown
+        function updateProjetosDropdown(projetos) {
+            var projetosDropdown = document.getElementById('projetos');
+            projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
+
+            // Adiciona os projetos ao dropdown
+            JSON.parse(projetos).forEach(function (projeto) {
+                var option = document.createElement('option');
+                option.value = projeto;
+                option.text = projeto;
+                projetosDropdown.appendChild(option);
+            });
+        }
+
+        // Função para lidar com a resposta do servidor
+        function handleResponse(response) {
+            // Aqui, você pode decidir o que fazer com a resposta.
+            // Neste exemplo, eu apenas log a resposta no console.
+            console.log(response);
+
+            // Se houver uma parte específica da página que você deseja atualizar, você pode fazer algo como:
+            // document.getElementById('suaDiv').innerHTML = response;
+        }
+    });
+</script>
+
 <?php include 'layouts/vendor-scripts.php'; ?>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Evento de mudança no formulário
+        $('#empresaForm input[type=radio]').change(function() {
+            // Obtém os projetos associados à empresa selecionada
+            var projetos = $(this).next('label').data('projetos');
+
+            // Atualiza a lista de projetos no dropdown
+            updateProjetosDropdown(projetos);
+
+            // Envie o formulário
+            $('#empresaForm').submit();
+        });
+
+        // Função para atualizar a lista de projetos no dropdown
+        function updateProjetosDropdown(projetos) {
+            var projetosDropdown = $('#projetos');
+            projetosDropdown.empty(); // Limpa a lista de projetos
+
+            // Adiciona os projetos ao dropdown
+            $.each(projetos, function(index, projeto) {
+                projetosDropdown.append($('<option>', {
+                    value: projeto,
+                    text: projeto
+                }));
+            });
+        }
+    });
+</script>
 
 <!-- twitter-bootstrap-wizard js -->
 <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
