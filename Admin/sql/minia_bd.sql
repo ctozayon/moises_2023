@@ -11,87 +11,85 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema minia_test
+-- Schema minia_php
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema minia_test
+-- Schema minia_php
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `minia_test` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `minia_test` ;
+CREATE SCHEMA IF NOT EXISTS `minia_php` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `minia_php` ;
 
 -- -----------------------------------------------------
--- Table `minia_test`.`company`
+-- Table `minia_php`.`company`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`company` (
-  `id` INT NOT NULL,
-  `name` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`))
+CREATE TABLE IF NOT EXISTS `minia_php`.`company` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`users`
+-- Table `minia_php`.`users`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`users` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`users` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `useremail` VARCHAR(255) NOT NULL,
-  `username` VARCHAR(255) NOT NULL,
+  `username` VARCHAR(255) NOT NULL UNIQUE,
   `firstname` VARCHAR(255) NULL DEFAULT NULL,
   `lastname` VARCHAR(255) NULL DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
   `token` VARCHAR(255) NULL DEFAULT NULL,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
+) 
+ENGINE=InnoDB 
+DEFAULT CHARSET=utf8mb4 
+COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`company_user`
+-- Table `minia_php`.`company_user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`company_user` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`company_user` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `id_user` INT NULL DEFAULT NULL,
   `id_company` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
   INDEX `id_user` (`id_user` ASC) VISIBLE,
   INDEX `id_company` (`id_company` ASC) VISIBLE,
   CONSTRAINT `company_user_ibfk_1`
     FOREIGN KEY (`id_user`)
-    REFERENCES `minia_test`.`users` (`id`),
+    REFERENCES `minia_php`.`users` (`id`),
   CONSTRAINT `company_user_ibfk_2`
     FOREIGN KEY (`id_company`)
-    REFERENCES `minia_test`.`company` (`id`))
+    REFERENCES `minia_php`.`company` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`project`
+-- Table `minia_php`.`project`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`project` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`project` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `id_company` INT NULL DEFAULT NULL,
   `name` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`),
   INDEX `id_company` (`id_company` ASC) VISIBLE,
   CONSTRAINT `project_ibfk_1`
     FOREIGN KEY (`id_company`)
-    REFERENCES `minia_test`.`company` (`id`))
+    REFERENCES `minia_php`.`company` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
--- Table `minia_test`.`sub_project`
+-- Table `minia_php`.`sub_project`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`sub_project` (
-  `id` INT NOT NULL,  
+CREATE TABLE IF NOT EXISTS `minia_php`.`sub_project` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,  
   `id_project` INT NULL DEFAULT NULL,
   `planned_start` DATE NULL DEFAULT NULL, 
   `actual_start` DATE NULL DEFAULT NULL,
@@ -104,92 +102,87 @@ CREATE TABLE IF NOT EXISTS `minia_test`.`sub_project` (
   `num_functions` INT NULL DEFAULT NULL,
   `estimated_cost` DECIMAL(10,2) NULL DEFAULT NULL,
   `actual_cost` DECIMAL(10,2) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
   INDEX `id_project` (`id_project` ASC) VISIBLE,
   CONSTRAINT `sub_project_ibfk_1`
     FOREIGN KEY (`id_project`)
-    REFERENCES `minia_test`.`project` (`id`))
+    REFERENCES `minia_php`.`project` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`file`
+-- Table `minia_php`.`file`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`file` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`file` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `id_project` INT NULL DEFAULT NULL,
   `id_company` INT NULL DEFAULT NULL,
   `id_user` INT NULL DEFAULT NULL,
   `name` VARCHAR(255) NOT NULL,
   `link` VARCHAR(255) NOT NULL,
   `upload_date` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
   INDEX `id_project` (`id_project` ASC) VISIBLE,
   INDEX `id_company` (`id_company` ASC) VISIBLE,
   INDEX `id_user` (`id_user` ASC) VISIBLE,
   CONSTRAINT `file_ibfk_1`
     FOREIGN KEY (`id_project`)
-    REFERENCES `minia_test`.`project` (`id`),
+    REFERENCES `minia_php`.`project` (`id`),
   CONSTRAINT `file_ibfk_2`
     FOREIGN KEY (`id_company`)
-    REFERENCES `minia_test`.`company` (`id`),
+    REFERENCES `minia_php`.`company` (`id`),
   CONSTRAINT `file_ibfk_3`
     FOREIGN KEY (`id_user`)
-    REFERENCES `minia_test`.`users` (`id`))
+    REFERENCES `minia_php`.`users` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`job_compensation`
+-- Table `minia_php`.`job_compensation`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`job_compensation` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`job_compensation` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `id_project` INT NULL DEFAULT NULL,
   `job` VARCHAR(255) NOT NULL,
   `num_people` INT NULL DEFAULT NULL,
   `compensation_value` DECIMAL(10,2) NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
   INDEX `id_project` (`id_project` ASC) VISIBLE,
   CONSTRAINT `job_compensation_ibfk_1`
     FOREIGN KEY (`id_project`)
-    REFERENCES `minia_test`.`project` (`id`))
+    REFERENCES `minia_php`.`project` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`permissions`
+-- Table `minia_php`.`permissions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`permissions` (
-  `id` INT NOT NULL,
-  `description` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id`))
+CREATE TABLE IF NOT EXISTS `minia_php`.`permissions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `description` VARCHAR(255) NOT NULL)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `minia_test`.`user_permissions`
+-- Table `minia_php`.`user_permissions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `minia_test`.`user_permissions` (
-  `id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `minia_php`.`user_permissions` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NULL DEFAULT NULL,
   `permission_id` INT NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
   INDEX `user_id` (`user_id` ASC) VISIBLE,
   INDEX `permission_id` (`permission_id` ASC) VISIBLE,
   CONSTRAINT `user_permissions_ibfk_1`
     FOREIGN KEY (`user_id`)
-    REFERENCES `minia_test`.`users` (`id`),
+    REFERENCES `minia_php`.`users` (`id`),
   CONSTRAINT `user_permissions_ibfk_2`
     FOREIGN KEY (`permission_id`)
-    REFERENCES `minia_test`.`permissions` (`id`))
+    REFERENCES `minia_php`.`permissions` (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;

@@ -3,8 +3,8 @@
 require_once "layouts/config.php";
 
 // Define variables and initialize with empty values
-$useremail = $username =  $password = $confirm_password = "";
-$useremail_err = $username_err = $password_err = $confirm_password_err = "";
+$useremail = $username = $firstname = $lastname = $password = $confirm_password = "";
+$useremail_err = $username_err = $firstname_err = $lastname_err = $password_err = $confirm_password_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -61,6 +61,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $password = trim($_POST["password"]);
     }
 
+    // Validate firstname
+    if (empty(trim($_POST["firstname"]))) {
+        $firstname_err = "Please enter your first name.";
+    } else {
+        $firstname = trim($_POST["firstname"]);
+    }
+
+    // Validate lastname
+    if (empty(trim($_POST["lastname"]))) {
+        $lastname_err = "Please enter your last name.";
+    } else {
+        $lastname = trim($_POST["lastname"]);
+    }
+
     // Validate confirm password
     if (empty(trim($_POST["confirm_password"]))) {
         $confirm_password_err = "Please enter a confirm password.";
@@ -72,18 +86,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check input errors before inserting in database
-    if (empty($useremail_err) && empty($username_err) && empty($password_err) && empty($confirm_password_err)) {
+    if (empty($useremail_err) && empty($username_err) && empty($firstname_err) && empty($lastname_err) && empty($password_err) && empty($confirm_password_err)) {
 
         // Prepare an insert statement
-        $sql = "INSERT INTO users (useremail, username, password, token) VALUES (?, ?, ?, ?)";
+        $sql = "INSERT INTO users (useremail, username, firstname, lastname, password, token) VALUES (?, ?, ?, ?, ?, ?)";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssss", $param_useremail, $param_username, $param_password, $param_token);
+            mysqli_stmt_bind_param($stmt, "ssssss", $param_useremail, $param_username, $param_firstname, $param_lastname, $param_password, $param_token);
 
             // Set parameters
             $param_useremail = $useremail;
             $param_username = $username;
+            $param_firstname = $firstname;
+            $param_lastname = $lastname;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             $param_token = bin2hex(random_bytes(50)); // generate unique token
 
@@ -144,6 +160,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label for="username" class="form-label">Username</label>
                                         <input type="text" class="form-control" id="username" placeholder="Enter username" required name="username" value="<?php echo $username; ?>">
                                         <span class="text-danger"><?php echo $username_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="firstname" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstname" placeholder="Enter first name" required name="firstname" value="<?php echo $firstname; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $firstname_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="lastname" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastname" placeholder="Enter last name" required name="lastname" value="<?php echo $lastname; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $lastname_err; ?></span>
                                     </div>
 
                                     <div class="mb-3 <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
