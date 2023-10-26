@@ -1,8 +1,24 @@
 <?php
-require 'vendor/autoload.php'; // Carrega o SDK da AWS
+// require 'vendor/autoload.php'; // Carrega o SDK da AWS
+require __DIR__ . '/../vendor/autoload.php';
 
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
+
+// Verifica se o arquivo foi enviado com sucesso
+if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
+    $targetDir = 'uploads/';
+    $targetFile = $targetDir . basename($_FILES["file"]["name"]);
+
+    // Move o arquivo para a pasta 'uploads'
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $targetFile)) {
+        echo "Arquivo enviado e movido para 'uploads/' com sucesso.";
+    } else {
+        echo "Ocorreu um erro ao mover o arquivo.";
+    }
+} else {
+    echo "Ocorreu um erro no envio do arquivo.";
+}
 
 $bucketName = 'mosynicria';
 $targetFile = 'uploads/' . basename($_FILES["file"]["name"]); // Caminho completo do arquivo no servidor local
@@ -36,3 +52,4 @@ try {
     echo "Ocorreu um erro na AWS: " . $e->getMessage();
 }
 ?>
+
