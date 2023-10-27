@@ -1,5 +1,8 @@
 <?php
+$language['CargaDados'] = "Carga de Dados";
 $language['Projetos'] = "Projetos";
+$language['Cadastrar_Projetos'] = "Cadastrar projetos";
+$language['Exibir_Projetos_Arquivos'] = "Exibir projetos e arquivos";
 $language['Mosyni'] = "Mosyni";
 $language['Menu'] = "Menu";
 $language['Dashboard'] = "Dashboard";

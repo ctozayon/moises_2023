@@ -314,14 +314,25 @@
                             </a>
                         </li> -->
 
-                       <li>
+                       <!-- <li>
                             <a href="form-cadastrar_projetos.php">
                                 <span data-key="t-form-upload">
-                                    <?php echo $language["Projetos"]; ?>
+                                    <!?php echo $language["Projetos"]; ?>
                                 </span>
                             </a>
+                        </li> -->
+
+                        <li>
+                            <a href="javascript: void(0);" class="has-arrow" data-key="t-projetos"><?php echo $language["Projetos"]; ?></a>
+                            <ul class="sub-menu" aria-expanded="true">
+                                <li><a href="form-cadastrar_projetos.php" data-key="t-cadastrarProjetos"><?php echo $language["Cadastrar_Projetos"]; ?></a></li>
+                                <li><a href="exibir-projetos.php" data-key="t-exibirProjetos"><?php echo $language["Exibir_Projetos_Arquivos"]; ?></a></li>
+                            </ul>
                         </li>
 
+                        
+
+                        
                         <li>
                             <a href="form-wizard.php">
                                 <span data-key="t-form-wizard">
