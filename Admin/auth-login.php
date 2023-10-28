@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
 
-    <title>Login | Moises - Análise que abre caminhos!</title>
+    <title>Login | Mosýni - Inovação e estratégia</title>
     <?php include 'layouts/head.php'; ?>
 
     <?php include 'layouts/head-style.php'; ?>
@@ -108,13 +108,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="d-flex flex-column h-100">
                             <div class="mb-4 mb-md-5 text-center">
                                 <a href="index.php" class="d-block auth-logo">
-                                    <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">Moisés</span>
+                                    <img src="assets/images/logo-mosyni-principal.png" alt="" height="108"> 
                                 </a>
                             </div>
                             <div class="auth-content my-auto">
                                 <div class="text-center">
                                     <h5 class="mb-0">Bem vindo de volta !</h5>
-                                    <p class="text-muted mt-2">Faça login para entrar no Moisés.</p>
+                                    <p class="text-muted mt-2">Faça login para entrar na plataforma.</p>
                                 </div>
                                 <form class="mt-4 pt-2" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                                     <div class="mb-3 <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
