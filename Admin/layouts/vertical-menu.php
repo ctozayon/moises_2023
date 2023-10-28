@@ -336,7 +336,7 @@
                         <li>
                             <a href="form-wizard.php">
                                 <span data-key="t-form-wizard">
-                                    <?php echo $language["Wizard"]; ?>
+                                    <?php echo $language["CargaDados"]; ?>
                                 </span>
                             </a>
                         </li>
