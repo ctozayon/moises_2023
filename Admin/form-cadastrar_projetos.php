@@ -92,10 +92,44 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
     }
+}
 
-    // Fechar a conexão com o banco de dados
+// Se o formulário de detalhes do projeto foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['projetos'])) {
+    // Recupera os dados do formulário
+    $id_project = $_POST['projetos'];
+    $planned_start = $_POST['dataInicioPlanejada'];
+    $actual_start = $_POST['dataInicioExecutada'];
+    $end_date = $_POST['dataTermino'];
+    $state = $_POST['estado']; // Certifique-se de que o campo no formulário tenha o ID "estado"
+    $city = $_POST['cidade'];
+    $neighborhood = $_POST['bairro'];
+    $num_people = $_POST['qtddPessoasProducao'];
+    $estimated_audience = $_POST['publicoEstimado'];
+    $num_functions = $_POST['qtddFuncoesProducao'];
+    $estimated_cost = $_POST['custoEstimadoProjeto'];
+    $actual_cost = $_POST['custoExecutadoProjeto'];
+
+    // Insira os dados na tabela de subprojetos (sub_project)
+    $sql = "INSERT INTO minia_php.sub_project 
+            (id_project, planned_start, actual_start, end_date, state, city, neighborhood, num_people, estimated_audience, num_functions, estimated_cost, actual_cost) 
+            VALUES ('$id_project', '$planned_start', '$actual_start', '$end_date', '$state', '$city', '$neighborhood', '$num_people', '$estimated_audience', '$num_functions', '$estimated_cost', '$actual_cost')";
+
+    // Execute a consulta SQL usando a conexão com o banco de dados
+    $result = mysqli_query($link, $sql);
+
+    // Se a consulta foi bem-sucedida, você pode retornar uma resposta de sucesso
+    if ($result) {
+        echo "Detalhes do projeto inseridos com sucesso!";
+    } else {
+        // Se a consulta falhou, você pode retornar uma mensagem de erro
+        echo "Erro ao inserir detalhes do projeto: " . mysqli_error($link);
+    }
+
+    // Certifique-se de fechar a conexão com o banco de dados, se aplicável
     mysqli_close($link);
 }
+
 ?>
 
 <?php include 'layouts/session.php'; ?>
@@ -217,109 +251,108 @@ $estados = array(
                                             </select>
                                             </div>
                                         </div>
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <div class="mb-3">
-                                                        <label for="example-date-input" class="form-label">Data de início planejada</label>
-                                                        <input class="form-control" type="date" value="2023-01-01" id="dataInicioPlanejada">
-                                                    </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-date-input" class="form-label">Data de início planejada</label>
+                                                    <input class="form-control" type="date" value="2023-01-01" id="dataInicioPlanejada" name="dataInicioPlanejada">
                                                 </div>
-                                                <div class="col-lg-4">
-                                                    <div class="mb-3">
-                                                        <label for="example-date-input" class="form-label">Data de início executada</label>
-                                                        <input class="form-control" type="date" value="2023-01-01" id="dataInicioExecutada">
-                                                    </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-date-input" class="form-label">Data de início executada</label>
+                                                    <input class="form-control" type="date" value="2023-01-01" id="dataInicioExecutada" name="dataInicioExecutada">
                                                 </div>
-                                                <div class="col-lg-4">
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-date-input" class="form-label">Data de término</label>
+                                                    <input class="form-control" type="date" value="2023-01-01" id="dataTermino" name="dataTermino">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Estado</label>
+                                                    <select class="form-select" id="estado" name="estado">
+                                                        <?php
+                                                        foreach ($estados as $estado) { ?>
+                                                            <option> <?php echo $estado ?> </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Cidade</label>
+                                                    <input class="form-control" type="text" id="cidade" name="cidade">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Bairro</label>
+                                                    <input class="form-control" type="text" id="bairro" name="bairro">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Quantidade de pessoas envolvidas na produção</label>
+                                                    <input class="form-control" type="text" id="qtddPessoasProducao" name="qtddPessoasProducao">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Quantidade de funções envolvidas na produção</label>
+                                                    <input class="form-control" type="text" id="qtddFuncoesProducao" name="qtddFuncoesProducao">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Público estimado</label>
+                                                    <input class="form-control" type="text" id="publicoEstimado" name="publicoEstimado">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-auto">
+                                                <div class="w-lg">
+                                                    <button type="submit" class="btn btn-primary w-lg">Gerar tabela pessoas x remuneração</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-auto">
+                                                <div class="mt-4">
                                                     <div class="mb-3">
-                                                        <label for="example-date-input" class="form-label">Data de término</label>
-                                                        <input class="form-control" type="date" value="2023-01-01" id="dataTermino">
+                                                        <!-- Inserir aqui a estrutura que montará a tabela dinamicamente após clicar no botão -->
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-lg-2">
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <div class="col-lg-auto">
+                                                <div class="mt-4">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Estado</label>
-                                                        <select class="form-select">
-                                                            <?php
-                                                            foreach ($estados as $estado) { ?>
-                                                                <option> <?php echo $estado ?> </option>
-                                                            <?php } ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Cidade</label>
-                                                        <input class="form-control" type="text" id="cidade">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-5">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Bairro</label>
-                                                        <input class="form-control" type="text" id="bairro">
+                                                        <label for="example-text-input" class="form-label">Remuneração média das pessoas envolvidas na produção</label>
+                                                        <input class="form-control" type="text" id="remuneracaoMedia" name="remuneracaoMedia">
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-lg-4">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Quantidade de pessoas envolvidas na produção</label>
-                                                        <input class="form-control" type="text" id="qtddPessoasProducao">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Quantidade de funções envolvidas na produção</label>
-                                                        <input class="form-control" type="text" id="qtddFuncoesProducao">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Público estimado</label>
-                                                        <input class="form-control" type="text" id="publicoEstimado">
-                                                    </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Custo estimado do projeto</label>
+                                                    <input class="form-control" type="text" id="custoEstimadoProjeto" name="custoEstimadoProjeto">
                                                 </div>
                                             </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-lg-auto">
-                                                    <div class="w-lg">
-                                                        <button type="submit" class="btn btn-primary w-lg">Gerar tabela pessoas x remuneração</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-lg-auto">
-                                                    <div class="mt-4">
-                                                        <div class="mb-3">
-                                                            <!-- Inserir aqui a estrutura que montará a tabela dinamicamente após clicar no botão -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row justify-content-center">
-                                                <div class="col-lg-auto">
-                                                    <div class="mt-4">
-                                                        <div class="mb-3">
-                                                            <label for="example-text-input" class="form-label">Remuneração média das pessoas envolvidas na produção</label>
-                                                            <input class="form-control" type="text" id="remuneracaoMedia">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-lg-6">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Custo estimado do projeto</label>
-                                                        <input class="form-control" type="text" id="custoEstimadoProjeto">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6">
-                                                    <div class="mb-3">
-                                                        <label for="example-text-input" class="form-label">Custo executado no projeto</label>
-                                                        <input class="form-control" type="text" id="custoExecutadoProjeto">
-                                                    </div>
+                                            <div class="col-lg-6">
+                                                <div class="mb-3">
+                                                    <label for="example-text-input" class="form-label">Custo executado no projeto</label>
+                                                    <input class="form-control" type="text" id="custoExecutadoProjeto" name="custoExecutadoProjeto">
                                                 </div>
                                             </div>
                                         </div>
@@ -336,7 +369,6 @@ $estados = array(
                         </div>
                     </div> <!-- end col -->
                 </div>
-
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
@@ -398,6 +430,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    document.getElementById('detalhesProjetoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Recupera os dados do formulário
+        var formData = new FormData(this);
+
+        // Cria uma instância do objeto XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Configura a requisição
+        xhr.open('POST', window.location.href, true);
+
+        // Define o tipo de dados esperado na resposta como JSON
+        xhr.responseType = 'json';
+
+        // Manipula o estado da requisição
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    // Lida com a resposta
+                    console.log('Status da requisição:', xhr.status);
+                    console.log('Resposta da requisição:', xhr.response);
+
+                    // Adicione aqui qualquer manipulação adicional da resposta, se necessário
+                }
+            }
+        };
+
+        // Envia a requisição com os dados do formulário
+        xhr.send(formData);
+    });
 
 
 

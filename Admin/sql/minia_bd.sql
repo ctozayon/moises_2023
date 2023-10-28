@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `minia_php`.`sub_project` (
   `city` VARCHAR(255) NULL DEFAULT NULL,
   `neighborhood` VARCHAR(255) NULL DEFAULT NULL,
   `num_people` INT NULL DEFAULT NULL,
-  `estimated audience` INT NULL DEFAULT NULL,
+  `estimated_audience` INT NULL DEFAULT NULL,
   `num_functions` INT NULL DEFAULT NULL,
   `estimated_cost` DECIMAL(10,2) NULL DEFAULT NULL,
   `actual_cost` DECIMAL(10,2) NULL DEFAULT NULL,
