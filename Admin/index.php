@@ -1,6 +1,10 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+<?php session_start(); 
+$empresas = $_SESSION['empresas'];
+?>
+
 <head>
     <title><?php echo $language["Mosyni"]; ?> | Zayon Data Mining</title>
 
