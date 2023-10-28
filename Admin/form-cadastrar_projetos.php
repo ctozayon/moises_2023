@@ -247,7 +247,7 @@ $estados = array(
                                             <label for="projetos">Selecione o projeto:</label>
                                             <select class="form-select" id="projetos" name="projetos">
                                                 <!-- A opção padrão quando nenhum projeto está disponível -->
-                                                <option value="" disabled selected>Nenhum projeto disponível</option>
+                                                <option value="" disabled selected>Selecione uma empresa acima</option>
                                             </select>
                                             </div>
                                         </div>
