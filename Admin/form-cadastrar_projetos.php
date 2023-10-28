@@ -2,35 +2,34 @@
 // Include config file
 require_once "layouts/config.php";
 
-// Consulta SQL
-$sql = "SELECT * FROM company";
+if (!isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null") {
+    // Consulta SQL
+    $sql = "SELECT * FROM company";
 
-// Executar a consulta
-$result = mysqli_query($link, $sql);
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
 
-// Verificar se a consulta foi bem-sucedida
-if ($result) {
-    // Inicializar a variável empresa como um array para armazenar os resultados
-    $empresas = array();
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável empresa como um array para armazenar os resultados
+        $empresas = array();
 
-    // Obter os resultados da consulta
-    while ($row = mysqli_fetch_assoc($result)) {
-        // Adicionar cada linha ao array
-        $empresas[] = $row;
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $empresas[] = $row;
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
+        var_dump($empresas);
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo "Erro na consulta: " . mysqli_error($link);
     }
-
-    // Liberar o resultado da consulta
-    mysqli_free_result($result);
-
-    // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-    var_dump($empresas);
-} else {
-    // Se a consulta falhou, exibir uma mensagem de erro
-    echo "Erro na consulta: " . mysqli_error($link);
 }
-
-// Fechar a conexão com o banco de dados
-mysqli_close($link);
 
 // Verifica se o formulário de projeto foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa']) && isset($_POST['nomeProjeto']) && $_POST['nomeProjeto'] != '') {
@@ -57,6 +56,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa']) &&
     // Certifique-se de fechar a conexão com o banco de dados, se aplicável
     mysqli_close($link);
 }
+
+// Seção para carregar projetos da empresa selecionada
+if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos)) {
+    $selectedEmpresa = $_POST['selectedEmpresa'];
+    
+    // Consulta SQL para obter os projetos da empresa selecionada
+    $sql = "SELECT * FROM project WHERE id_company = '$selectedEmpresa'";
+    
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável $projetos como um array para armazenar os resultados
+        $projetos = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $projetos[] = $row;
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Enviar a resposta como JSON
+        header('Content-Type: application/json');
+
+        // Imprime o JSON
+        echo json_encode($projetos);
+
+        exit(); // Certifique-se de sair após enviar a resposta
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+    }
+
+    // Fechar a conexão com o banco de dados
+    mysqli_close($link);
+}
 ?>
 
 <?php include 'layouts/session.php'; ?>
@@ -71,15 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa']) &&
 </head>
 
 <?php include 'layouts/body.php'; ?>
-
-<?php
-// $empresas = array("Cria", "Faza", "Arti");
-$empresas_projetos = array(
-    'Cria' => array('Projeto1 Cria', 'Projeto2 Cria', 'Projeto3 Cria'),
-    'Faza' => array('Projeto1 Faza', 'Projeto2 Faza', 'Projeto3 Faza'),
-    'Arti' => array('Projeto1 Arti', 'Projeto2 Arti', 'Projeto3 Arti')
-);
-?>
 
 <?php
 $estados = array(
@@ -180,25 +210,13 @@ $estados = array(
                                     <form id="detalhesProjetoForm">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label for="projetos">Selecione o projeto:</label>
-                                                <select class="form-select" id="projetos" name="projetos">
-                                                    <?php
-                                                    // Verifica se uma empresa foi selecionada
-                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
-                                                        // Obtém os projetos correspondentes à empresa selecionada
-                                                        $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
-
-                                                        // Exibe a lista de projetos
-                                                        foreach ($projetos as $projeto) {
-                                                            echo '<option value="' . $projeto . '">' . $projeto . '</option>';
-                                                        }
-                                                    } else {
-                                                        // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
-                                                        echo '<option value="">Selecione uma empresa primeiro</option>';
-                                                    }
-                                                    ?>
-                                                </select>
+                                            <label for="projetos">Selecione o projeto:</label>
+                                            <select class="form-select" id="projetos" name="projetos">
+                                                <!-- A opção padrão quando nenhum projeto está disponível -->
+                                                <option value="" disabled selected>Nenhum projeto disponível</option>
+                                            </select>
                                             </div>
+                                        </div>
                                             <div class="row">
                                                 <div class="col-lg-4">
                                                     <div class="mb-3">
@@ -344,12 +362,58 @@ $estados = array(
 
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Adiciona evento de envio no formulário de projeto
-        document.getElementById('projetoForm').addEventListener('submit', function (e) {
-            e.preventDefault();
+document.addEventListener('DOMContentLoaded', function () {
+    function handleResponse(response) {
+        console.log("Response received:", response);
 
-            var formData = new FormData(this);
+        try {
+            // Tenta fazer o parse da resposta JSON
+            var projetos = JSON.parse(response);
+
+            // Verifica se a resposta não é nula e é um array antes de processar
+            if (projetos !== null && Array.isArray(projetos)) {
+                console.log("Response is an array:", projetos);
+
+                var projetosDropdown = document.getElementById('projetos');
+                projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
+
+                // Adiciona a opção padrão
+                var defaultOption = document.createElement('option');
+                defaultOption.value = "";
+                defaultOption.text = "Selecione um projeto";
+                defaultOption.disabled = true;
+                defaultOption.selected = true;
+                projetosDropdown.appendChild(defaultOption);
+
+                // Adiciona os projetos ao dropdown
+                projetos.forEach(function (projeto) {
+                    var option = document.createElement('option');
+                    option.value = projeto.id;
+                    option.text = projeto.name;
+                    projetosDropdown.appendChild(option);
+                });
+            } 
+        } catch (e) {
+            console.error('Erro ao fazer o parse da resposta JSON:', e);
+        }
+    }
+
+
+
+
+    // Adiciona evento de mudança nos rádios
+    var radios = document.querySelectorAll('input[type=radio][name=selectedEmpresa]');
+    radios.forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            var projetosLabel = this.nextElementSibling;
+            var projetos = projetosLabel.getAttribute('data-projetos');
+
+            // Atualiza a lista de projetos no dropdown
+            updateProjetosDropdown(projetos);
+
+            // Envia o formulário via AJAX
+            var formData = new FormData(document.getElementById('projetoForm'));
+            formData.append('selectedEmpresa', this.value);
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', window.location.href, true);
@@ -361,73 +425,55 @@ $estados = array(
             };
             xhr.send(formData);
         });
-
-        // Adiciona evento de envio no formulário de detalhes do projeto
-        document.getElementById('detalhesProjetoForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            var formData = new FormData(this);
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', window.location.href, true);
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Lida com a resposta
-                    handleResponse(xhr.responseText);
-                }
-            };
-            xhr.send(formData);
-        });
-
-        // Adiciona evento de mudança nos rádios
-        var radios = document.querySelectorAll('input[type=radio][name=selectedEmpresa]');
-        radios.forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                var projetosLabel = this.nextElementSibling;
-                var projetos = projetosLabel.getAttribute('data-projetos');
-
-                // Atualiza a lista de projetos no dropdown
-                updateProjetosDropdown(projetos);
-
-                // Envia o formulário via AJAX
-                var formData = new FormData(document.getElementById('projetoForm'));
-
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', window.location.href, true);
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        // Lida com a resposta
-                        handleResponse(xhr.responseText);
-                    }
-                };
-                xhr.send(formData);
-            });
-        });
-
-        // Função para atualizar a lista de projetos no dropdown
-        function updateProjetosDropdown(projetos) {
-            var projetosDropdown = document.getElementById('projetos');
-            projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
-
-            // Adiciona os projetos ao dropdown
-            JSON.parse(projetos).forEach(function (projeto) {
-                var option = document.createElement('option');
-                option.value = projeto;
-                option.text = projeto;
-                projetosDropdown.appendChild(option);
-            });
-        }
-
-        // Função para lidar com a resposta do servidor
-        function handleResponse(response) {
-            // Aqui, você pode decidir o que fazer com a resposta.
-            // Neste exemplo, eu apenas log a resposta no console.
-            console.log(response);
-
-            // Se houver uma parte específica da página que você deseja atualizar, você pode fazer algo como:
-            // document.getElementById('suaDiv').innerHTML = response;
-        }
     });
+
+    // Adiciona evento de envio no formulário de projeto
+    document.getElementById('projetoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', window.location.href, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Lida com a resposta
+                handleResponse(xhr.responseText);
+            }
+        };
+        xhr.send(formData);
+    });
+
+    function updateProjetosDropdown(selectedEmpresa) {
+        var projetosDropdown = document.getElementById('projetos');
+        projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
+
+        // Envia o pedido AJAX para obter a lista de projetos
+        var formData = new FormData(document.getElementById('projetoForm'));
+        formData.append('selectedEmpresa', selectedEmpresa);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', window.location.href, true);
+
+        // Define o tipo de dados esperado na resposta como JSON
+        xhr.responseType = 'json';
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                console.log('Status da requisição:', xhr.status);
+                console.log('Resposta da requisição:', xhr.response);
+
+                if (xhr.status == 200) {
+                    // Lida com a resposta
+                    handleResponse(xhr.response);
+                }
+            }
+        };
+
+        // Envia o formulário via AJAX
+        xhr.send(formData);
+    }
+});
 </script>
 
 </body>
