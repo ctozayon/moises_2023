@@ -285,14 +285,14 @@
                 <li class="menu-title" data-key="t-menu"><?php echo $language["Menu"]; ?></li>
 
                 <li>
-                    <a href="index.php">
+                    <a href="index.php" class="has-arrow">
                         <i data-feather="home"></i>
                         <span data-key="t-dashboard"><?php echo $language["Dashboard"]; ?></span>
                     </a>
                 </li>
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow">
+                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-btn">
                         <i data-feather="cloud-drizzle"></i>
                         <span data-key="t-apps"><?php echo $language["Extracao"]; ?></span>
                     </a>
