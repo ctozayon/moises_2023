@@ -218,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="mt-4 mt-md-5 text-center">
                                 <p class="mb-0">© <script>
                                         document.write(new Date().getFullYear())
-                                    </script> Minia . Desenvolvido com <i class="mdi mdi-heart text-danger"></i> por Zayon</p>
+                                    </script>Desenvolvido com <i class="mdi mdi-heart text-danger"></i> por Zayon</p>
                             </div>
                         </div>
                     </div>

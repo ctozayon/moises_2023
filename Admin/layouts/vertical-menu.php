@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="index.php" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24">
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
                     </span>
                 </a>
 
                 <a href="index.php" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24">
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
                     </span>
                 </a>
             </div>
