@@ -225,20 +225,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 
 <!-- JAVASCRIPT -->
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<?php include 'layouts/vendor-scripts.php'; ?>
 
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<!-- Required datatable js -->
+<script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
 
-<!-- DataTables Buttons CSS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+<!-- Responsive examples -->
+<script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
-<!-- DataTables Buttons JS -->
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
-
-<!-- Your custom script -->
+<!-- Datatable init js -->
 <script src="assets/js/pages/datatables.init.js"></script>
 
 <script src="assets/js/app.js"></script>
