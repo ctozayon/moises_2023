@@ -225,7 +225,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 
 <!-- JAVASCRIPT -->
 
-<?php include 'layouts/vendor-scripts.php'; ?>
+<?php include 'layouts/vendor-scripts.php'; ?><script src="assets/libs/jquery/jquery.min.js"></script>
+<script src="assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="assets/libs/simplebar/simplebar.min.js"></script>
+<script src="assets/libs/node-waves/waves.min.js"></script>
+<script src="assets/libs/feather-icons/feather.min.js"></script>
+<!-- pace js -->
+<script src="assets/libs/pace-js/pace.min.js"></script>
 
 <!-- Required datatable js -->
 <script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
