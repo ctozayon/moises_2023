@@ -1,9 +1,11 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+<?php session_start(); 
+$empresas = $_SESSION['empresas']?>
+
 # Criei uma variável chamada empresas e atribua a ela um array com os nomes Cria, Faza e Arti e projetos fictícios
-<?php $empresas = array("Cria", "Faza", "Arti"); 
-      $empresas_projetos = array(
+<?php $empresas_projetos = array(
         'Cria' => array('Projeto1 Cria', 'Projeto2 Cria', 'Projeto3 Cria'),
         'Faza' => array('Projeto1 Faza', 'Projeto2 Faza', 'Projeto3 Faza'),
         'Arti' => array('Projeto1 Arti', 'Projeto2 Arti', 'Projeto3 Arti')
@@ -105,9 +107,10 @@
                                                     // Loop para exibir os nomes das empresas   
                                                     foreach ($empresas as $empresa) {?>
                                                         <div class='form-check mb-3'>
-                                                            <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa; ?>' value='<?php echo $empresa; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
-                                                            <label class='form-check-label' for='formRadios<?php echo $empresa; ?>' data-projetos='<?php echo json_encode($empresas_projetos[$empresa]); ?>'>
-                                                                <?php echo $empresa; ?>
+                                                            <?php $empresa_minuscula = strtolower($empresa_minuscula); ?>
+                                                            <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa_minuscula; ?>' value='<?php echo $empresa['id']; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa_minuscula) ? 'checked' : ''; ?>>
+                                                            <label class='form-check-label' for='formRadios<?php echo $empresa_minuscula; ?>' data-projetos='<?php echo json_encode($empresas_projetos[$empresa_minuscula]); ?>'>
+                                                                <?php echo $empresa['name']; ?>
                                                             </label>
                                                         </div>
                                                     <?php } ?>
