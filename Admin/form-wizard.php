@@ -646,7 +646,8 @@
 
 <!-- JAVASCRIPT -->
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<?php include 'layouts/vendor-scripts.php'; ?>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // ... (o mesmo código que acima)
@@ -703,9 +704,8 @@
     });
 </script>
 
-<?php include 'layouts/vendor-scripts.php'; ?>
+<!--?php include 'layouts/vendor-scripts.php'; ?> -->
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
         // Evento de mudança no formulário
