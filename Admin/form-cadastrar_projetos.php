@@ -23,12 +23,10 @@ if (!isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null") {
         // Liberar o resultado da consulta
         mysqli_free_result($result);
 
-        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-        var_dump($empresas);
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo "Erro na consulta: " . mysqli_error($link);
-    }
+    };
 }
 
 // Verifica se o formulário de projeto foi enviado
