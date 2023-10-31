@@ -4,6 +4,11 @@ $empresas = $_SESSION['empresas'];
 
 require_once 'layouts/config.php';
 
+if (isset($_POST['selectedProjeto'])){
+    $projeto = $_POST['selectedProjeto'];
+    $empresa = $_POST['selectedEmpresa'];
+}
+
 // Seção para carregar projetos da empresa selecionada
 if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos)) {
     $selectedEmpresa = $_POST['selectedEmpresa'];
@@ -732,6 +737,28 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
             }
         }
 
+        // Adiciona evento de mudança nos selects
+        var selectProjetos = document.getElementById('projetos');
+        
+        selectProjetos.addEventListener('change', function () {
+            console.log('Selecionado: ' + this.value);
+            
+            // Envia o formulário via AJAX
+            var formData = new FormData();
+            formData.append('selectedProjeto', this.value);
+            formData.append('selectedEmpresa', this.value);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', window.location.href, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Lida com a resposta
+                    handleResponse(xhr.responseText);
+                }
+            };
+
+            xhr.send(formData);
+        });
 
         // Função para lidar com a resposta do servidor
         function handleResponse(response) {
@@ -744,24 +771,6 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 </script>
 
 <?php include 'layouts/vendor-scripts.php'; ?>
-
-<script>
-    $(document).ready(function() {
-        // Evento de mudança no formulário
-        $('#empresaForm input[type=radio]').change(function() {
-            // Obtém os projetos associados à empresa selecionada
-            var projetos = $(this).next('label').data('projetos');
-
-            // Atualiza a lista de projetos no dropdown
-            updateProjetosDropdown(projetos);
-
-            // Envie o formulário
-            $('#empresaForm').submit();
-        });
-
-        
-    });
-</script>
 
 <!-- twitter-bootstrap-wizard js -->
 <script src="assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js"></script>
