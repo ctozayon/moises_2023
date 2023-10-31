@@ -5,19 +5,19 @@
             <div class="navbar-brand-box">
                 <a href="index.php" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24">
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
                     </span>
                 </a>
 
                 <a href="index.php" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24">
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="assets/images/logo-mosc2a2ni_principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
+                        <img src="assets/images/logo-mosyni-principal.png" alt="" height="24"> <span class="logo-txt">Mosyni</span>
                     </span>
                 </a>
             </div>
@@ -255,7 +255,7 @@
 
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item topbar-light bg-light-subtle border-start border-end" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-1.jpg" alt="Header Avatar">
+                    <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-1.png" alt="Header Avatar">
                     <span class="d-none d-xl-inline-block ms-1 fw-medium"><?php echo $language["Shawn_L"]; ?>.</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
@@ -292,7 +292,7 @@
                 </li>
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow">
+                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-btn">
                         <i data-feather="cloud-drizzle"></i>
                         <span data-key="t-apps"><?php echo $language["Extracao"]; ?></span>
                     </a>

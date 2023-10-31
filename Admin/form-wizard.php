@@ -1,14 +1,49 @@
+<?php
+session_start(); 
+$empresas = $_SESSION['empresas'];
+
+require_once 'layouts/config.php';
+
+// Seção para carregar projetos da empresa selecionada
+if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos)) {
+    $selectedEmpresa = $_POST['selectedEmpresa'];
+    
+    // Consulta SQL para obter os projetos da empresa selecionada
+    $sql = "SELECT * FROM project WHERE id_company = '$selectedEmpresa'";
+    
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável $projetos como um array para armazenar os resultados
+        $projetos = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $projetos[] = $row;
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Enviar a resposta como JSON
+        header('Content-Type: application/json');
+
+        // Imprime o JSON
+        echo json_encode($projetos);
+
+        exit(); // Certifique-se de sair após enviar a resposta
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+    }
+}
+?>
+
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
-
-# Criei uma variável chamada empresas e atribua a ela um array com os nomes Cria, Faza e Arti e projetos fictícios
-<?php $empresas = array("Cria", "Faza", "Arti"); 
-      $empresas_projetos = array(
-        'Cria' => array('Projeto1 Cria', 'Projeto2 Cria', 'Projeto3 Cria'),
-        'Faza' => array('Projeto1 Faza', 'Projeto2 Faza', 'Projeto3 Faza'),
-        'Arti' => array('Projeto1 Arti', 'Projeto2 Arti', 'Projeto3 Arti')
-    );
-?>
 
 <head>
 
@@ -104,10 +139,12 @@
                                                     <?php
                                                     // Loop para exibir os nomes das empresas   
                                                     foreach ($empresas as $empresa) {?>
+                                                        <?php $empresa_minuscula = strtolower($empresa['name']);?>
                                                         <div class='form-check mb-3'>
-                                                            <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa; ?>' value='<?php echo $empresa; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa) ? 'checked' : ''; ?>>
-                                                            <label class='form-check-label' for='formRadios<?php echo $empresa; ?>' data-projetos='<?php echo json_encode($empresas_projetos[$empresa]); ?>'>
-                                                                <?php echo $empresa; ?>
+                                                            <?php $empresa_minuscula = strtolower($empresa_minuscula); ?>
+                                                            <input class='form-check-input' type='radio' name='selectedEmpresa' id='formRadios<?php echo $empresa_minuscula; ?>' value='<?php echo $empresa['id']; ?>' <?php echo (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] == $empresa_minuscula) ? 'checked' : ''; ?>>
+                                                            <label class='form-check-label' for='formRadios<?php echo $empresa_minuscula; ?>' data-projetos='<?php echo json_encode($projetos); ?>'>
+                                                                <?php echo $empresa['name']; ?>
                                                             </label>
                                                         </div>
                                                     <?php } ?>
@@ -119,13 +156,13 @@
                                                 <select class="form-select" id="projetos" name="projetos">
                                                     <?php
                                                     // Verifica se uma empresa foi selecionada
-                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $empresas_projetos)) {
+                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $projetos)) {
                                                         // Obtém os projetos correspondentes à empresa selecionada
-                                                        $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
+                                                        // $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
 
                                                         // Exibe a lista de projetos
                                                         foreach ($projetos as $projeto) {
-                                                            echo '<option value="' . $projeto . '">' . $projeto . '</option>';
+                                                            echo '<option value="' . $projeto['id'] . '">' . $projeto['name'] . '</option>';
                                                         }
                                                     } else {
                                                         // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
@@ -189,7 +226,7 @@
                                             <div class="card-body">
 
                                                 <div>
-                                                    <form action="upload_test.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
+                                                    <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
                                                         <div class="fallback">
                                                             <input name="file" type="file" multiple="multiple">
                                                         </div>
@@ -657,10 +694,7 @@
             radio.addEventListener('change', function () {
                 var projetosLabel = this.nextElementSibling;
                 var projetos = projetosLabel.getAttribute('data-projetos');
-
-                // Atualiza a lista de projetos no dropdown
-                updateProjetosDropdown(projetos);
-
+                
                 // Envia o formulário via AJAX
                 var formData = new FormData();
                 formData.append('selectedEmpresa', this.value);
@@ -672,7 +706,11 @@
                         // Lida com a resposta
                         handleResponse(xhr.responseText);
                     }
+                projetos = xhr.responseText;
+                // Atualiza a lista de projetos no dropdown
+                updateProjetosDropdown(projetos);
                 };
+
                 xhr.send(formData);
             });
         });
@@ -682,20 +720,22 @@
             var projetosDropdown = document.getElementById('projetos');
             projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
 
-            // Adiciona os projetos ao dropdown
-            JSON.parse(projetos).forEach(function (projeto) {
-                var option = document.createElement('option');
-                option.value = projeto;
-                option.text = projeto;
-                projetosDropdown.appendChild(option);
-            });
+            // Verifica se projetos não é nulo ou indefinido
+            if (projetos !== 'null' && projetos !== undefined && projetos !== '') {
+                // Adiciona os projetos ao dropdown
+                JSON.parse(projetos).forEach(function (projeto) {
+                    var option = document.createElement('option');
+                    option.value = projeto.id;
+                    option.text = projeto.name;
+                    projetosDropdown.appendChild(option);
+                });
+            }
         }
+
 
         // Função para lidar com a resposta do servidor
         function handleResponse(response) {
             // Aqui, você pode decidir o que fazer com a resposta.
-            // Neste exemplo, eu apenas log a resposta no console.
-            console.log(response);
 
             // Se houver uma parte específica da página que você deseja atualizar, você pode fazer algo como:
             // document.getElementById('suaDiv').innerHTML = response;
@@ -705,7 +745,6 @@
 
 <?php include 'layouts/vendor-scripts.php'; ?>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>
     $(document).ready(function() {
         // Evento de mudança no formulário
@@ -720,19 +759,7 @@
             $('#empresaForm').submit();
         });
 
-        // Função para atualizar a lista de projetos no dropdown
-        function updateProjetosDropdown(projetos) {
-            var projetosDropdown = $('#projetos');
-            projetosDropdown.empty(); // Limpa a lista de projetos
-
-            // Adiciona os projetos ao dropdown
-            $.each(projetos, function(index, projeto) {
-                projetosDropdown.append($('<option>', {
-                    value: projeto,
-                    text: projeto
-                }));
-            });
-        }
+        
     });
 </script>
 

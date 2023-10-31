@@ -83,10 +83,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
+    if ($_SESSION["loggedin"] = true) {
+        // Consulta SQL
+        $sql = "SELECT * FROM company";
+    
+        // Executar a consulta
+        $result = mysqli_query($link, $sql);
+    
+        // Verificar se a consulta foi bem-sucedida
+        if ($result) {
+            // Inicializar a variável empresa como um array para armazenar os resultados
+            $empresas = array();
+            session_start();
+    
+            // Obter os resultados da consulta
+            while ($row = mysqli_fetch_assoc($result)) {
+                // Adicionar cada linha ao array
+                $empresas[] = $row;
+                $_SESSION["empresas"] = $empresas;
+            }
+    
+            // Liberar o resultado da consulta
+            mysqli_free_result($result);
+    
+            // Exibir o conteúdo da variável empresa (pode ser removido em produção)
+            var_dump($empresas);
+        } else {
+            // Se a consulta falhou, exibir uma mensagem de erro
+            echo "Erro na consulta: " . mysqli_error($link);
+        }
+    }
+    
     // Close connection
     mysqli_close($link);
-}
-?>
+}?>
+
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -187,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <div class="mt-4 mt-md-5 text-center">
                                 <p class="mb-0">© <script>
                                         document.write(new Date().getFullYear())
-                                    </script> Minia . Desenvolvido com <i class="mdi mdi-heart text-danger"></i> por Zayon</p>
+                                    </script>Desenvolvido com <i class="mdi mdi-heart text-danger"></i> por Zayon</p>
                             </div>
                         </div>
                     </div>
