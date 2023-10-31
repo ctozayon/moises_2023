@@ -161,27 +161,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
                                                     <div class="tab-content text-muted mt-4 mt-md-0" id="v-pills-tabContent">
                                                         <div class="tab-pane fade show active" id="v-pills-p1cria" role="tabpanel" aria-labelledby="v-pills-p1cria-tab">
                                                             <p>
-                                                                <table id="datatable" class="table table-bordered dt-responsive w-100">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Nome do arquivo</th>
-                                                                            <th>Link (URL)</th>
-                                                                            <th>Data do Upload</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>Tiger Nixon</td>
-                                                                            <td>https://s3.console.aws.amazon.com/s3/object/mosynicria?region=us-east-1&prefix=001-000015.xml</td>
-                                                                            <td>2011/04/25</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>Donna Snider</td>
-                                                                            <td>Customer Support</td>
-                                                                            <td>2011/01/25</td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
+                                                                <div class="table-responsive">
+                                                                    <table id="datatable" class="table table-bordered dt-responsive w-100">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Nome do arquivo</th>
+                                                                                <th>Link (URL)</th>
+                                                                                <th>Data do Upload</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td>Tiger Nixon</td>
+                                                                                <td>https://s3.console.aws.amazon.com/s3/object/mosynicria?region=us-east-1&prefix=001-000015.xml</td>
+                                                                                <td>2011/04/25</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>Donna Snider</td>
+                                                                                <td>Customer Support</td>
+                                                                                <td>2011/01/25</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
 
                                                             </p>
                                                         </div>
@@ -224,8 +226,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 <!-- /Right-bar -->
 
 <!-- JAVASCRIPT -->
-
-<?php include 'layouts/vendor-scripts.php'; ?><script src="assets/libs/jquery/jquery.min.js"></script>
+<script src="assets/libs/jquery/jquery.min.js"></script>
 <script src="assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="assets/libs/simplebar/simplebar.min.js"></script>
 <script src="assets/libs/node-waves/waves.min.js"></script>
@@ -240,6 +241,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 <!-- Responsive examples -->
 <script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- DataTables -->
+<link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+<link href="assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
 <!-- Datatable init js -->
 <script src="assets/js/pages/datatables.init.js"></script>
