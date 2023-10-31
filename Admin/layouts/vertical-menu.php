@@ -22,7 +22,7 @@
                 </a>
             </div>
 
-            <button type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
+            <button title="btnHamburguer" type="button" class="btn btn-sm px-3 font-size-16 header-item" id="vertical-menu-btn">
                 <i class="fa fa-fw fa-bars"></i>
             </button>
 
@@ -30,7 +30,7 @@
 
         <div class="d-flex">
             <div class="dropdown d-none d-sm-inline-block">
-                <button type="button" class="btn header-item" id="mode-setting-btn">
+                <button title="modoTela" type="button" class="btn header-item" id="mode-setting-btn">
                     <i data-feather="moon" class="icon-lg layout-mode-dark"></i>
                     <i data-feather="sun" class="icon-lg layout-mode-light"></i>
                 </button>
@@ -74,7 +74,7 @@
                 </li>
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-btn">
+                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu">
                         <i data-feather="cloud-drizzle"></i>
                         <span data-key="t-apps"><?php echo $language["Extracao"]; ?></span>
                     </a>

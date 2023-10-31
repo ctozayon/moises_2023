@@ -102,15 +102,15 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                 <div id="basic-pills-wizard" class="twitter-bs-wizard">
                                     <ul class="twitter-bs-wizard-nav">
                                         <li class="nav-item">
-                                            <a href="#seller-details" class="nav-link" data-toggle="tab">
-                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Para qual cliente deseja fazer o upload?">
+                                            <a href="#empresaProjeto" class="nav-link" data-toggle="tab">
+                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Empresa e projeto">
                                                     <i class="fas fa-users"></i>
                                                 </div>
                                             </a>
                                         </li>
                                         <li class="nav-item">
-                                            <a href="#company-document" class="nav-link" data-toggle="tab">
-                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Selecione os arquivos para upload:">
+                                            <a href="#uploadArquivo" class="nav-link" data-toggle="tab">
+                                                <div class="step-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Upload de arquivos">
                                                     <i class="fas fa-cloud-upload-alt"></i>
                                                 </div>
                                             </a>
@@ -118,7 +118,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                     </ul>
                                     <!-- wizard-nav -->
                                     <div class="tab-content twitter-bs-wizard-tab-content">
-                                        <div class="tab-pane" id="seller-details">
+                                        <div class="tab-pane" id="empresaProjeto">
                                             <div class="text-center mb-4">
                                                 <h5>Para qual cliente deseja fazer o upload?</h5>
                                                 <p class="card-title-desc">Selecione entre os clientes exibidos para enviar os arquivos para a pasta correta:</p>
@@ -161,43 +161,36 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                                 </select>
                                             </div>
                                             <ul class="pager wizard twitter-bs-wizard-pager-link">
-                                                <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
-                                                            class="bx bx-chevron-right ms-1"></i></a></li>
+                                                <li class="next"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()">Próximo <i class="bx bx-chevron-right ms-1"></i></a></li>
                                             </ul>
                                         </div>
                                         <!-- tab pane -->
-                                        <div class="tab-pane" id="company-document">
+                                        <div class="tab-pane" id="uploadArquivo">
                                             <div>
-                                            <div class="text-center mb-4">
-                                                <h5>Selecione os arquivos para upload:</h5>
-                                                <p class="card-title-desc">Utilize apenas arquivos no formarto XML, ou outro já ajustado com arquipe técnica</p>
-                                            </div>
-                                            <div class="card-body">
-                                                <div>
-                                                    <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
-                                                        <div class="fallback">
-                                                            <input name="file" type="file" multiple="multiple">
-                                                        </div>
-                                                        <div class="dz-message needsclick">
-                                                            <div class="mb-3">
-                                                                <i class="display-4 text-muted bx bx-cloud-upload"></i>
-                                                            </div>
-                                                            <h5>Arraste os arquivos aqui ou clique para fazer upload</h5>
-                                                        </div>
-                                                    </form>
+                                                <div class="text-center mb-4">
+                                                    <h5>Selecione os arquivos para upload:</h5>
+                                                    <p class="card-title-desc">Utilize apenas arquivos no formarto XML, ou outro já ajustado com arquipe técnica</p>
                                                 </div>
+                                                <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
+                                                    <div class="fallback">
+                                                        <input name="file" type="file" multiple="multiple">
+                                                    </div>
+                                                    <div class="dz-message needsclick">
+                                                        <div class="mb-3">
+                                                            <i class="display-4 text-muted bx bx-cloud-upload"></i>
+                                                        </div>
+                                                        <h5>Arraste os arquivos aqui ou clique para fazer upload</h5>
+                                                    </div>
+                                                </form>
+                                                <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                                    <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()"><i class="bx bx-chevron-left me-1"></i> Voltar</a></li>
+                                                    <!-- <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
+                                                                class="bx bx-chevron-right ms-1"></i></a></li> -->
+                                                    <li class="float-end"><a href="javascript: void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".confirmModal">Concluir </a></li>
+                                                </ul>
                                             </div>
-                                            <ul class="pager wizard twitter-bs-wizard-pager-link">
-                                                <li class="previous"><a href="javascript: void(0);" class="btn btn-primary"><i
-                                                            class="bx bx-chevron-left me-1"></i> Voltar</a></li>
-                                                <!-- <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
-                                                            class="bx bx-chevron-right ms-1"></i></a></li> -->
-                                                <li class="float-end"><a href="javascript: void(0);" class="btn btn-primary" data-bs-toggle="modal"
-                                                data-bs-target=".confirmModal">Concluir </a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                        <!-- tab pane -->
+                                        </div> <!-- tab pane -->
+                                    </div>                                        
                                         <!-- <div class="tab-pane" id="bank-detail">
                                             <div>
                                                 <div class="text-center mb-4">

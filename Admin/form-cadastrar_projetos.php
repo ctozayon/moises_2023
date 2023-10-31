@@ -243,7 +243,7 @@ $estados = array(
                                 <div class="row">
                                     <form id="detalhesProjetoForm">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-6 mb-3">
                                             <label for="projetos">Selecione o projeto:</label>
                                             <select class="form-select" id="projetos" name="projetos">
                                                 <!-- A opção padrão quando nenhum projeto está disponível -->
