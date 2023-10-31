@@ -721,7 +721,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
             projetosDropdown.innerHTML = ''; // Limpa a lista de projetos
 
             // Verifica se projetos não é nulo ou indefinido
-            if (projetos !== 'null' && projetos !== undefined) {
+            if (projetos !== 'null' && projetos !== undefined && projetos !== '') {
                 // Adiciona os projetos ao dropdown
                 JSON.parse(projetos).forEach(function (projeto) {
                     var option = document.createElement('option');
@@ -761,19 +761,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
             $('#empresaForm').submit();
         });
 
-        // Função para atualizar a lista de projetos no dropdown
-        function updateProjetosDropdown(projetos) {
-            var projetosDropdown = $('#projetos');
-            projetosDropdown.empty(); // Limpa a lista de projetos
-
-            // Adiciona os projetos ao dropdown
-            $.each(projetos, function(index, projeto) {
-                projetosDropdown.append($('<option>', {
-                    value: projeto,
-                    text: projeto
-                }));
-            });
-        }
+        
     });
 </script>
 
