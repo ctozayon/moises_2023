@@ -736,8 +736,6 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
         // Função para lidar com a resposta do servidor
         function handleResponse(response) {
             // Aqui, você pode decidir o que fazer com a resposta.
-            // Neste exemplo, eu apenas log a resposta no console.
-            console.log(response);
 
             // Se houver uma parte específica da página que você deseja atualizar, você pode fazer algo como:
             // document.getElementById('suaDiv').innerHTML = response;
