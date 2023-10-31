@@ -53,9 +53,12 @@ $empresas = $_SESSION['empresas'];
                     <h4>Seja bem vindo(a)!</h4>
                     <p class="card-title-desc">A ferramenta que facilita seu trabalho de análise de dados
                 </div>
-
-
-
+                
+                <div class="row">
+                    <div class="col-12">
+                        <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNGZjNzNiOGYtOTg3MC00NmI0LWJjNjUtZDcwMmQ5ZTM3ZmRlIiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9&embedImagePlaceholder=true&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
+                    </div>
+                </div>
             </div>
             <!-- container-fluid -->
         </div>

@@ -221,8 +221,8 @@ $estados = array(
                                         <div class="row justify-content-end">
                                             <div class="col-lg-auto">
                                                 <div class="mt-4">
-                                                    <button type="submit" class="btn btn-primary w-lg">Salvar projeto</button>
-                                                </div>
+                                                    <button type="submit" class="btn btn-primary w-lg" id="salvarProjeto">Salvar projeto</button>
+                                                </div>                                                
                                             </div>
                                         </div>
                                     </form>
@@ -316,22 +316,22 @@ $estados = array(
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center">
+                                        <!-- <div class="row justify-content-center">
                                             <div class="col-lg-auto">
                                                 <div class="w-lg">
                                                     <button type="submit" class="btn btn-primary w-lg">Gerar tabela pessoas x remuneração</button>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row justify-content-center">
+                                        </div> -->
+                                        <!-- <div class="row justify-content-center">
                                             <div class="col-lg-auto">
                                                 <div class="mt-4">
                                                     <div class="mb-3">
-                                                        <!-- Inserir aqui a estrutura que montará a tabela dinamicamente após clicar no botão -->
+                                                        Inserir aqui a estrutura que montará a tabela dinamicamente após clicar no botão
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="row justify-content-center">
                                             <div class="col-lg-auto">
                                                 <div class="mt-4">

@@ -180,14 +180,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 </label>
                                             </div>
                                         </div>
-
                                     </div>
                                     <div class="mb-3">
                                         <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Entrar</button>
                                     </div>
                                 </form>
 
-                                <div class="mt-4 pt-2 text-center">
+                                <!-- <div class="mt-4 pt-2 text-center">
                                     <div class="signin-other-title">
                                         <h5 class="font-size-14 mb-3 text-muted fw-medium">- Entrar com -</h5>
                                     </div>
@@ -209,7 +208,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             </a>
                                         </li>
                                     </ul>
-                                </div>
+                                </div> -->
 
                                 <div class="mt-5 text-center">
                                     <p class="text-muted mb-0">Não possui uma conta ? <a href="auth-register.php" class="text-primary fw-semibold"> Cadastre-se agora </a> </p>
