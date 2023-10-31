@@ -11,9 +11,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate useremail
     if (empty(trim($_POST["useremail"]))) {
-        $useremail_err = "Please enter a useremail.";
+        $useremail_err = "Por favor digite seu e-mail de usuário.";
     } elseif (!filter_var($_POST["useremail"], FILTER_VALIDATE_EMAIL)) {
-        $useremail_err = "Invalid email format";
+        $useremail_err = "Formato de e-mail inválido.";
     } else {
         // Prepare a select statement
         $sql = "SELECT id FROM users WHERE useremail = ?";
@@ -31,12 +31,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 mysqli_stmt_store_result($stmt);
 
                 if (mysqli_stmt_num_rows($stmt) == 1) {
-                    $useremail_err = "This useremail is already taken.";
+                    $useremail_err = "Este e-mail já está sendo utilizado.";
                 } else {
                     $useremail = trim($_POST["useremail"]);
                 }
             } else {
-                echo "Oops! Something went wrong. Please try again later.";
+                echo "Oops! Algo está errado. Por favor tente novamente mais tarde.";
             }
 
             // Close statement
@@ -47,41 +47,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Validate username
     if (empty(trim($_POST["username"]))) {
-        $username_err = "Please enter a username.";
+        $username_err = "Por favor insira seu nome de usuário.";
     } else {
         $username = trim($_POST["username"]);
     }
 
     // Validate password
     if (empty(trim($_POST["password"]))) {
-        $password_err = "Please enter a password.";
+        $password_err = "Por favor insira a senha.";
     } elseif (strlen(trim($_POST["password"])) < 6) {
-        $password_err = "Password must have atleast 6 characters.";
+        $password_err = "A senha deve conter pelo menos 6 caracteres.";
     } else {
         $password = trim($_POST["password"]);
     }
 
     // Validate firstname
     if (empty(trim($_POST["firstname"]))) {
-        $firstname_err = "Please enter your first name.";
+        $firstname_err = "Digite seu primeiro nome.";
     } else {
         $firstname = trim($_POST["firstname"]);
     }
 
     // Validate lastname
     if (empty(trim($_POST["lastname"]))) {
-        $lastname_err = "Please enter your last name.";
+        $lastname_err = "Digite seu último nome.";
     } else {
         $lastname = trim($_POST["lastname"]);
     }
 
     // Validate confirm password
     if (empty(trim($_POST["confirm_password"]))) {
-        $confirm_password_err = "Please enter a confirm password.";
+        $confirm_password_err = "Confirme a sua senha.";
     } else {
         $confirm_password = trim($_POST["confirm_password"]);
         if (empty($password_err) && ($password != $confirm_password)) {
-            $confirm_password_err = "Password did not match.";
+            $confirm_password_err = "A senha não está compatível.";
         }
     }
 
@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Redirect to login page
                 header("location: index.php");
             } else {
-                echo "Something went wrong. Please try again later.";
+                echo "Algo está errado. Por favor tente novamente mais tarde.";
             }
 
             // Close statement
@@ -124,7 +124,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <head>
 
-    <title>Register | Minia - Admin & Dashboard Template</title>
+    <title>Novo Registro | Mosýni</title>
     <?php include 'layouts/head.php'; ?>
     <?php include 'layouts/head-style.php'; ?>
 
@@ -141,64 +141,64 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="d-flex flex-column h-100">
                             <div class="mb-4 mb-md-5 text-center">
                                 <a href="index.php" class="d-block auth-logo">
-                                    <img src="assets/images/logo-sm.svg" alt="" height="28"> <span class="logo-txt">Minia</span>
+                                    <img src="assets/images/logo-mosyni-principal.png" alt="" height="56">
                                 </a>
                             </div>
                             <div class="auth-content my-auto">
                                 <div class="text-center">
-                                    <h5 class="mb-0">Register Account</h5>
-                                    <p class="text-muted mt-2">Get your free Minia account now.</p>
+                                    <h5 class="mb-0">Novo registro</h5>
+                                    <p class="text-muted mt-2">Faça seu registro agora.</p>
                                 </div>
                                 <form class="needs-validation mt-4 pt-2" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                                     <div class="mb-3 <?php echo (!empty($useremail_err)) ? 'has-error' : ''; ?>">
                                         <label for="useremail" class="form-label">Email</label>
-                                        <input type="email" class="form-control" id="useremail" placeholder="Enter email" required name="useremail" value="<?php echo $useremail; ?>">
+                                        <input type="email" class="form-control" id="useremail" placeholder="Insira seu email" required name="useremail" value="<?php echo $useremail; ?>">
                                         <span class="text-danger"><?php echo $useremail_err; ?></span>
                                     </div>
 
                                     <div class="mb-3 <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control" id="username" placeholder="Enter username" required name="username" value="<?php echo $username; ?>">
+                                        <label for="username" class="form-label">Nome de usuário</label>
+                                        <input type="text" class="form-control" id="username" placeholder="Insira seu nome de usuário" required name="username" value="<?php echo $username; ?>">
                                         <span class="text-danger"><?php echo $username_err; ?></span>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="firstname" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="firstname" placeholder="Enter first name" required name="firstname" value="<?php echo $firstname; ?>">
+                                        <label for="firstname" class="form-label">Primeiro nome</label>
+                                        <input type="text" class="form-control" id="firstname" placeholder="Insira seu primeiro nome" required name="firstname" value="<?php echo $firstname; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $firstname_err; ?></span>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="lastname" class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" id="lastname" placeholder="Enter last name" required name="lastname" value="<?php echo $lastname; ?>">
+                                        <label for="lastname" class="form-label">Último nome</label>
+                                        <input type="text" class="form-control" id="lastname" placeholder="Insira seu último nome" required name="lastname" value="<?php echo $lastname; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $lastname_err; ?></span>
                                     </div>
 
                                     <div class="mb-3 <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">
-                                        <label for="userpassword" class="form-label">Password</label>
-                                        <input type="password" class="form-control" id="userpassword" placeholder="Enter password" required name="password" value="<?php echo $password; ?>">
+                                        <label for="userpassword" class="form-label">Senha</label>
+                                        <input type="password" class="form-control" id="userpassword" placeholder="Insira sua senha" required name="password" value="<?php echo $password; ?>">
                                         <span class="text-danger"><?php echo $password_err; ?></span>
                                     </div>
 
                                     <div class="mb-3 <?php echo (!empty($confirm_password_err)) ? 'has-error' : ''; ?>">
-                                        <label class="form-label" for="userpassword">Confirm Password</label>
-                                        <input type="password" class="form-control" id="confirm_password" placeholder="Enter confirm password" name="confirm_password" value="<?php echo $confirm_password; ?>">
+                                        <label class="form-label" for="userpassword">Confirme a senha</label>
+                                        <input type="password" class="form-control" id="confirm_password" placeholder="Confirme sua senha" name="confirm_password" value="<?php echo $confirm_password; ?>">
                                         <span class="text-danger"><?php echo $confirm_password_err; ?></span>
                                     </div>
                                     
                                     <div class="mb-4">
-                                        <p class="mb-0">By registering you agree to the Minia <a href="#" class="text-primary">Terms of Use</a></p>
+                                        <p class="mb-0">Registrando-se você concorda com os <a href="#" class="text-primary">Termos de Uso</a></p>
                                     </div>
                                     <div class="mb-3">
-                                        <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Register</button>
+                                        <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Registrar</button>
                                     </div>
                                 </form>
 
                                 <div class="mt-4 pt-2 text-center">
                                     <div class="signin-other-title">
-                                        <h5 class="font-size-14 mb-3 text-muted fw-medium">- Sign up using -</h5>
+                                        <h5 class="font-size-14 mb-3 text-muted fw-medium">- Registrar usando -</h5>
                                     </div>
 
                                     <ul class="list-inline mb-0">
@@ -221,13 +221,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
 
                                 <div class="mt-5 text-center">
-                                    <p class="text-muted mb-0">Already have an account ? <a href="auth-login.php" class="text-primary fw-semibold"> Login </a> </p>
+                                    <p class="text-muted mb-0">Já possui uma conta ? <a href="auth-login.php" class="text-primary fw-semibold"> Login </a> </p>
                                 </div>
                             </div>
                             <div class="mt-4 mt-md-5 text-center">
                                 <p class="mb-0">© <script>
                                         document.write(new Date().getFullYear())
-                                    </script> Minia . Crafted with <i class="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                    </script> Desenvolvido com <i class="mdi mdi-heart text-danger"></i> por Zayon</p>
                             </div>
                         </div>
                     </div>

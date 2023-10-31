@@ -1,6 +1,10 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+<?php session_start(); 
+$empresas = $_SESSION['empresas'];
+?>
+
 <head>
     <title><?php echo $language["Mosyni"]; ?> | Zayon Data Mining</title>
 
@@ -49,9 +53,12 @@
                     <h4>Seja bem vindo(a)!</h4>
                     <p class="card-title-desc">A ferramenta que facilita seu trabalho de análise de dados
                 </div>
-
-
-
+                
+                <div class="row">
+                    <div class="col-12">
+                        <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNGZjNzNiOGYtOTg3MC00NmI0LWJjNjUtZDcwMmQ5ZTM3ZmRlIiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9&embedImagePlaceholder=true&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
+                    </div>
+                </div>
             </div>
             <!-- container-fluid -->
         </div>
@@ -70,16 +77,6 @@
 
 <!-- JAVASCRIPT -->
 <?php include 'layouts/vendor-scripts.php'; ?>
-
-<!-- apexcharts -->
-<script src="assets/libs/apexcharts/apexcharts.min.js"></script>
-
-<!-- Plugins js-->
-<script src="assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="assets/libs/admin-resources/jquery.vectormap/maps/jquery-jvectormap-world-mill-en.js"></script>
-
-<!-- dashboard init -->
-<script src="assets/js/pages/dashboard.init.js"></script>
 
 <!-- App js -->
 <script src="assets/js/app.js"></script>
