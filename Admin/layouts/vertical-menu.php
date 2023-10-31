@@ -285,7 +285,7 @@
                 <li class="menu-title" data-key="t-menu"><?php echo $language["Menu"]; ?></li>
 
                 <li>
-                    <a href="index.php" class="has-arrow">
+                    <a href="index.php">
                         <i data-feather="home"></i>
                         <span data-key="t-dashboard"><?php echo $language["Dashboard"]; ?></span>
                     </a>
