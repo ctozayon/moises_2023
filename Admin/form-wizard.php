@@ -5,12 +5,12 @@ $empresas = $_SESSION['empresas'];
 require_once 'layouts/config.php';
 
 if (isset($_POST['selectedProjeto'])){
-    $projeto = $_POST['selectedProjeto'];
-    $empresa = $_POST['selectedEmpresa'];
+    $_SESSION['empresa_selecionada'] = $_POST['selectedEmpresa'];
+    $_SESSION['projeto_selecionado'] = $_POST['selectedProjeto'];
 }
 
 // Seção para carregar projetos da empresa selecionada
-if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos)) {
+if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos) && !isset($_POST['selectedProjeto'])) {
     $selectedEmpresa = $_POST['selectedEmpresa'];
     
     // Consulta SQL para obter os projetos da empresa selecionada
@@ -161,7 +161,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                                 <select class="form-select" id="projetos" name="projetos">
                                                     <?php
                                                     // Verifica se uma empresa foi selecionada
-                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $projetos)) {
+                                                    if (isset($_POST['selectedEmpresa']) && isset($projetos)) {
                                                         // Obtém os projetos correspondentes à empresa selecionada
                                                         // $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
 
@@ -231,7 +231,14 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                             <div class="card-body">
 
                                                 <div>
+                                                    <!-- // Debug: verifique os valores antes do formulário -->
+                                                    <?php echo "Empresa: " . $_SESSION['empresa_selecionada'] . "<br>";
+                                                    echo "Projeto: " . $_SESSION['projeto_selecionado'] . "<br>";
+                                                    ?>
                                                     <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
+                                                        <!-- Adicione os campos de entrada para suas duas variáveis -->
+                                                        <input type="text" name="empresa" value="<php echo $_SESSION['empresa_selecionada'] ?>">
+                                                        <input type="text" name="projeto" value="<php echo $_SESSION['projeto_selecionado']">
                                                         <div class="fallback">
                                                             <input name="file" type="file" multiple="multiple">
                                                         </div>
@@ -239,7 +246,6 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                                             <div class="mb-3">
                                                                 <i class="display-4 text-muted bx bx-cloud-upload"></i>
                                                             </div>
-
                                                             <h5>Arraste os arquivos aqui ou clique para fazer upload</h5>
                                                         </div>
                                                     </form>
@@ -739,14 +745,15 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 
         // Adiciona evento de mudança nos selects
         var selectProjetos = document.getElementById('projetos');
-        
+        var selectedEmpresa = document.getElementById('selectedEmpresa');
+
         selectProjetos.addEventListener('change', function () {
-            console.log('Selecionado: ' + this.value);
-            
+            console.log('Projeto Selecionado: ' + this.value);
+
             // Envia o formulário via AJAX
             var formData = new FormData();
             formData.append('selectedProjeto', this.value);
-            formData.append('selectedEmpresa', this.value);
+            formData.append('selectedEmpresa', this.value);  // Use selectedEmpresa.value para obter o valor do select de empresas
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', window.location.href, true);

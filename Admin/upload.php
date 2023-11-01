@@ -5,6 +5,10 @@ require __DIR__ . '/../vendor/autoload.php';
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;
 
+session_start();
+$empresa = $_SESSION['empresa_selecionada'];
+$projeto = $_SESSION['projeto_selecionado'];
+
 if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
     $targetDir = 'uploads/';
     $targetFile = $targetDir . basename($_FILES["file"]["name"]);
