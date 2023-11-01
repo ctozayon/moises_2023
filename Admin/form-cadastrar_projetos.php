@@ -460,6 +460,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Envia a requisição com os dados do formulário
         xhr.send(formData);
+
+        // Limpa os valores do formulário após o envio bem-sucedido
+        document.getElementById('detalhesProjetoForm').reset();
+        
     });
 
 
@@ -505,6 +509,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         };
         xhr.send(formData);
+
+        // Limpa os valores do formulário após o envio bem-sucedido
+        document.getElementById('projetoForm').reset();
     });
 
     function updateProjetosDropdown(selectedEmpresa) {
@@ -535,6 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Envia o formulário via AJAX
         xhr.send(formData);
+        
     }
 });
 </script>
