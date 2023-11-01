@@ -11,6 +11,7 @@ $projeto = $_SESSION['projeto_selecionado'];
 
 if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
     $targetDir = 'uploads/';
+    $_FILES["file"]["name"] = $empresa . '_' . $projeto . '_' . basename($_FILES["file"]["name"]);
     $targetFile = $targetDir . basename($_FILES["file"]["name"]);
 
     // Move o arquivo para a pasta 'uploads'

@@ -5,8 +5,11 @@ $empresas = $_SESSION['empresas'];
 require_once 'layouts/config.php';
 
 if (isset($_POST['selectedProjeto'])){
-    $_SESSION['empresa_selecionada'] = $_POST['selectedEmpresa'];
     $_SESSION['projeto_selecionado'] = $_POST['selectedProjeto'];
+}
+
+if (isset($_POST['selectedEmpresa'])){
+    $_SESSION['empresa_selecionada'] = $_POST['selectedEmpresa'];
 }
 
 // Seção para carregar projetos da empresa selecionada
@@ -232,13 +235,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 
                                                 <div>
                                                     <!-- // Debug: verifique os valores antes do formulário -->
-                                                    <?php echo "Empresa: " . $_SESSION['empresa_selecionada'] . "<br>";
-                                                    echo "Projeto: " . $_SESSION['projeto_selecionado'] . "<br>";
-                                                    ?>
                                                     <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
-                                                        <!-- Adicione os campos de entrada para suas duas variáveis -->
-                                                        <input type="text" name="empresa" value="<php echo $_SESSION['empresa_selecionada'] ?>">
-                                                        <input type="text" name="projeto" value="<php echo $_SESSION['projeto_selecionado']">
                                                         <div class="fallback">
                                                             <input name="file" type="file" multiple="multiple">
                                                         </div>
@@ -745,15 +742,13 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 
         // Adiciona evento de mudança nos selects
         var selectProjetos = document.getElementById('projetos');
-        var selectedEmpresa = document.getElementById('selectedEmpresa');
 
         selectProjetos.addEventListener('change', function () {
             console.log('Projeto Selecionado: ' + this.value);
 
             // Envia o formulário via AJAX
             var formData = new FormData();
-            formData.append('selectedProjeto', this.value);
-            formData.append('selectedEmpresa', this.value);  // Use selectedEmpresa.value para obter o valor do select de empresas
+            formData.append('selectedProjeto', this.value);  // O problema está aqui! Use selectedEmpresa.value para obter o valor do select de empresas
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', window.location.href, true);
