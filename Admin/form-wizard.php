@@ -293,7 +293,8 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 
 <!-- JAVASCRIPT -->
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<?php include 'layouts/vendor-scripts.php'; ?>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // ... (o mesmo código que acima)
@@ -353,7 +354,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
     });
 </script>
 
-<?php include 'layouts/vendor-scripts.php'; ?>
+<!--?php include 'layouts/vendor-scripts.php'; ?> -->
 
 <script>
     $(document).ready(function() {
