@@ -4,8 +4,16 @@ $empresas = $_SESSION['empresas'];
 
 require_once 'layouts/config.php';
 
+if (isset($_POST['selectedProjeto'])){
+    $_SESSION['projeto_selecionado'] = $_POST['selectedProjeto'];
+}
+
+if (isset($_POST['selectedEmpresa'])){
+    $_SESSION['empresa_selecionada'] = $_POST['selectedEmpresa'];
+}
+
 // Seção para carregar projetos da empresa selecionada
-if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos)) {
+if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !isset($projetos) && !isset($_POST['selectedProjeto'])) {
     $selectedEmpresa = $_POST['selectedEmpresa'];
     
     // Consulta SQL para obter os projetos da empresa selecionada
@@ -145,7 +153,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                                 <select class="form-select" id="projetos" name="projetos">
                                                     <?php
                                                     // Verifica se uma empresa foi selecionada
-                                                    if (isset($_POST['selectedEmpresa']) && array_key_exists($_POST['selectedEmpresa'], $projetos)) {
+                                                    if (isset($_POST['selectedEmpresa']) && isset($projetos)) {
                                                         // Obtém os projetos correspondentes à empresa selecionada
                                                         // $projetos = $empresas_projetos[$_POST['selectedEmpresa']];
 
@@ -166,31 +174,39 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                         </div>
                                         <!-- tab pane -->
                                         <div class="tab-pane" id="uploadArquivo">
-                                            <div>
-                                                <div class="text-center mb-4">
-                                                    <h5>Selecione os arquivos para upload:</h5>
-                                                    <p class="card-title-desc">Utilize apenas arquivos no formarto XML, ou outro já ajustado com arquipe técnica</p>
-                                                </div>
-                                                <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
-                                                    <div class="fallback">
-                                                        <input name="file" type="file" multiple="multiple">
-                                                    </div>
-                                                    <div class="dz-message needsclick">
-                                                        <div class="mb-3">
-                                                            <i class="display-4 text-muted bx bx-cloud-upload"></i>
-                                                        </div>
-                                                        <h5>Arraste os arquivos aqui ou clique para fazer upload</h5>
-                                                    </div>
-                                                </form>
-                                                <ul class="pager wizard twitter-bs-wizard-pager-link">
-                                                    <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()"><i class="bx bx-chevron-left me-1"></i> Voltar</a></li>
-                                                    <!-- <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
-                                                                class="bx bx-chevron-right ms-1"></i></a></li> -->
-                                                    <li class="float-end"><a href="javascript: void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".confirmModal">Concluir </a></li>
-                                                </ul>
+                                          <div>
+                                            <div class="text-center mb-4">
+                                                <h5>Selecione os arquivos para upload:</h5>
+                                                <p class="card-title-desc">Utilize apenas arquivos no formarto XML, ou outro já ajustado com arquipe técnica>
                                             </div>
-                                        </div> <!-- tab pane -->
-                                    </div>                                        
+
+                                            <div class="card-body">
+
+                                                <div>
+                                                     <!-- // Debug: verifique os valores antes do formulário -->
+                                                    <form action="upload.php" method="post" enctype="multipart/form-data" class="dropzone" id="awsDropzone">
+                                                        <div class="fallback">
+                                                            <input name="file" type="file" multiple="multiple">
+                                                        </div>
+                                                        <div class="dz-message needsclick">
+                                                            <div class="mb-3">
+                                                                <i class="display-4 text-muted bx bx-cloud-upload"></i>
+                                                            </div>
+
+                                                            <h5>Arraste os arquivos aqui ou clique para fazer upload</h5>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                            <ul class="pager wizard twitter-bs-wizard-pager-link">
+                                                <li class="previous"><a href="javascript: void(0);" class="btn btn-primary" onclick="nextTab()"><i class="bx bx-chevron-left me-1"></i> Voltar</a></li>
+                                                <!-- <li class="next"><a href="javascript: void(0);" class="btn btn-primary">Próximo <i
+                                                            class="bx bx-chevron-right ms-1"></i></a></li> -->
+                                                <li class="float-end"><a href="javascript: void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target=".confirmModal">Concluir </a></li>
+                                            </ul>
+                                          </div>
+                                        </div>
+                                        <!-- tab pane -->
                                         <!-- <div class="tab-pane" id="bank-detail">
                                             <div>
                                                 <div class="text-center mb-4">
@@ -241,7 +257,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                                                             data-bs-target=".confirmModal">Concluir </a></li>
                                                 </ul>
                                             </div>
-                                        </div> -->
+                                        </div>  -->
                                         <!-- tab pane -->
                                     </div>
                                     <!-- end tab content -->
@@ -343,6 +359,27 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
             }
         }
 
+        // Adiciona evento de mudança nos selects
+        var selectProjetos = document.getElementById('projetos');
+
+        selectProjetos.addEventListener('change', function () {
+            console.log('Projeto Selecionado: ' + this.value);
+
+            // Envia o formulário via AJAX
+            var formData = new FormData();
+            formData.append('selectedProjeto', this.value);  // O problema está aqui! Use selectedEmpresa.value para obter o valor do select de empresas
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', window.location.href, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Lida com a resposta
+                    handleResponse(xhr.responseText);
+                }
+            };
+
+            xhr.send(formData);
+        });
 
         // Função para lidar com a resposta do servidor
         function handleResponse(response) {
