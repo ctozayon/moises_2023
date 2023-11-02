@@ -15,7 +15,8 @@ $id_user = $_SESSION["id"];
 if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
     $targetDir = 'uploads/';
     $nome_original = basename($_FILES["file"]["name"]);
-    $nome_modificado = $empresa . '_' . $projeto . '_' . basename($_FILES["file"]["name"]);
+    $nome_sem_espaco = str_replace(' ', '_', $nome_original);
+    $nome_modificado = $empresa . '_' . $projeto . '_' . $nome_sem_espaco;
     $targetFile = $targetDir . $nome_modificado;
     $url = 'https://mosynicria.s3.amazonaws.com/' . $nome_modificado;
 
