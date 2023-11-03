@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
-                            $_SESSION["id"] = $id;
+                            $_SESSION["user_id"] = $id;
                             $_SESSION["username"] = $username;
                             $_SESSION["firstname"] = $firstname;
                             $_SESSION["permission_id"] = $permission_id;
@@ -90,7 +90,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($_SESSION["loggedin"] = true) {
         // Consulta SQL
-        $sql = "SELECT * FROM company";
+
+        if ($_SESSION["permission_id"] == 1 || $_SESSION["permission_id"] == 2) {
+            $sql = "SELECT * FROM company";
+        } else {
+            $sql = "SELECT C.id, C.name FROM company C
+            join company_user CU on C.id = CU.id_company
+            WHERE CU.id_user = " . $_SESSION["user_id"];
+        }
     
         // Executar a consulta
         $result = mysqli_query($link, $sql);
