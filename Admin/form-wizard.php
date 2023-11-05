@@ -361,13 +361,16 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
 
         // Adiciona evento de mudança nos selects
         var selectProjetos = document.getElementById('projetos');
+        var nextButton = document.querySelector('.pager li.next');
+        // Inicialmente, ocultamos o botão
+        nextButton.style.visibility = 'hidden';
 
         selectProjetos.addEventListener('change', function () {
             console.log('Projeto Selecionado: ' + this.value);
 
             // Envia o formulário via AJAX
             var formData = new FormData();
-            formData.append('selectedProjeto', this.value);  // O problema está aqui! Use selectedEmpresa.value para obter o valor do select de empresas
+            formData.append('selectedProjeto', this.value);
 
             var xhr = new XMLHttpRequest();
             xhr.open('POST', window.location.href, true);
@@ -375,6 +378,9 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Lida com a resposta
                     handleResponse(xhr.responseText);
+
+                    // Exibe ou oculta o botão com base na seleção do projeto
+                    nextButton.style.visibility = this.value !== '' ? 'visible' : 'hidden';
                 }
             };
 
