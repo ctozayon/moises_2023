@@ -77,38 +77,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 // Seção para carregar arquivos do projeto selecionado
 if (isset($_POST['selectedProjeto'])) {
     $selectedProjeto = $_POST['selectedProjeto'];
-    
-    // Consulta SQL para obter os projetos da Projeto selecionada
-    $sql = "SELECT * FROM file WHERE id_project = '$selectedProjeto'";
-    
-    // Executar a consulta
-    $result = mysqli_query($link, $sql);
 
-    // Verificar se a consulta foi bem-sucedida
-    if ($result) {
-        // Inicializar a variável $arquivos como um array para armazenar os resultados
-        $arquivos = array();
+        // Consulta SQL para obter os projetos da Projeto selecionada
+        $sql = "SELECT * FROM file WHERE id_project = '$selectedProjeto'";
+        
+        // Executar a consulta
+        $result = mysqli_query($link, $sql);
 
-        // Obter os resultados da consulta
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Adicionar cada linha ao array
-            $arquivos[] = $row;
+        // Verificar se a consulta foi bem-sucedida
+        if ($result) {
+            // Inicializar a variável $arquivos como um array para armazenar os resultados
+            $arquivos = array();
+
+            // Obter os resultados da consulta
+            while ($row = mysqli_fetch_assoc($result)) {
+                // Adicionar cada linha ao array
+                $arquivos[] = $row;
+            }
+
+            // Liberar o resultado da consulta
+            mysqli_free_result($result);
+
+            // Enviar a resposta como JSON
+            header('Content-Type: application/json');
+
+            // Imprime o JSON
+            echo json_encode($arquivos);
+
+            exit(); // Certifique-se de sair após enviar a resposta
+        } else {
+            // Se a consulta falhou, exibir uma mensagem de erro
+            echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
         }
-
-        // Liberar o resultado da consulta
-        mysqli_free_result($result);
-
-        // Enviar a resposta como JSON
-        header('Content-Type: application/json');
-
-        // Imprime o JSON
-        echo json_encode($arquivos);
-
-        exit(); // Certifique-se de sair após enviar a resposta
-    } else {
-        // Se a consulta falhou, exibir uma mensagem de erro
-        echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
-    }
 }
 
 ?>
@@ -207,7 +207,7 @@ if (isset($_POST['selectedProjeto'])) {
                                                                             <th>Data do Upload</th>
                                                                         </tr>
                                                                     </thead>
-                                                                    <tbody>
+                                                                    <tbody id="tabela-arquivos">
                                                                         <!-- Conteúdo da tabela aqui -->
                                                                     </tbody>
                                                                 </table>
@@ -345,8 +345,16 @@ if (isset($_POST['selectedProjeto'])) {
                     if (xhr.status == 200) {
                         try {
                             var responseText = xhr.responseText.trim();
-                            if (responseText) {
-                                var arquivos = JSON.parse(responseText);
+                            var cleanedResponse = responseText.replace(/\n/g, '').trim();
+                            console.log(cleanedResponse);
+                            if (cleanedResponse !== '') {
+                                // Tentar fazer o parse novamente
+                                try {
+                                    var arquivos = JSON.parse(cleanedResponse);
+                                    console.log("Array parseado:", arquivos);
+                                } catch (error) {
+                                    console.error("Erro ao fazer o parse JSON:", error);
+                                }
                                 atualizarListaArquivos(arquivos);
                             } else {
                                 console.error('Resposta JSON vazia ou inválida.');
@@ -364,14 +372,11 @@ if (isset($_POST['selectedProjeto'])) {
         };
     }
 
-
-
-        
     function atualizarListaArquivos(arquivos) {
-        const listaArquivos = document.getElementById('lista-arquivos');
+        const listaArquivos = document.getElementById('tabela-arquivos');
         listaArquivos.innerHTML = '';
 
-        arquivos = JSON.parse(arquivos);
+        // arquivos = JSON.parse(arquivos);
 
         // Adiciona uma linha na tabela para cada arquivo na resposta
         arquivos.forEach(arquivo => {
