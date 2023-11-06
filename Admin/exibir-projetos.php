@@ -376,8 +376,6 @@ if (isset($_POST['selectedProjeto'])) {
         const listaArquivos = document.getElementById('tabela-arquivos');
         listaArquivos.innerHTML = '';
 
-        // arquivos = JSON.parse(arquivos);
-
         // Adiciona uma linha na tabela para cada arquivo na resposta
         arquivos.forEach(arquivo => {
             const row = document.createElement('tr');
@@ -388,7 +386,15 @@ if (isset($_POST['selectedProjeto'])) {
             `;
             listaArquivos.appendChild(row);
         });
+
+        // Obtenha a referência ao DataTable salva
+        var dataTable = $('#datatable').data('datatable');
+
+        // Atualize os dados do DataTable
+        dataTable.clear();
+        dataTable.rows.add(listaArquivos).draw();
     }
+
 
 </script>
 </body>
