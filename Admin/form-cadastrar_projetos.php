@@ -2,34 +2,8 @@
 // Include config file
 require_once "layouts/config.php";
 
-if (!isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null") {
-    // Consulta SQL
-    $sql = "SELECT * FROM company";
-
-    // Executar a consulta
-    $result = mysqli_query($link, $sql);
-
-    // Verificar se a consulta foi bem-sucedida
-    if ($result) {
-        // Inicializar a variável empresa como um array para armazenar os resultados
-        $empresas = array();
-
-        // Obter os resultados da consulta
-        while ($row = mysqli_fetch_assoc($result)) {
-            // Adicionar cada linha ao array
-            $empresas[] = $row;
-        }
-
-        // Liberar o resultado da consulta
-        mysqli_free_result($result);
-
-        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-        var_dump($empresas);
-    } else {
-        // Se a consulta falhou, exibir uma mensagem de erro
-        echo "Erro na consulta: " . mysqli_error($link);
-    }
-}
+session_start(); 
+$empresas = $_SESSION['empresas'];
 
 // Verifica se o formulário de projeto foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa']) && isset($_POST['nomeProjeto']) && $_POST['nomeProjeto'] != '') {

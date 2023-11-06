@@ -9,7 +9,7 @@ use Aws\Exception\AwsException;
 session_start();
 $empresa = $_SESSION['empresa_selecionada'];
 $projeto = $_SESSION['projeto_selecionado'];
-$id_user = $_SESSION["id"];
+$id_user = $_SESSION["user_id"];
 
 
 if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {

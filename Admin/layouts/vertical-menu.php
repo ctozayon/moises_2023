@@ -53,7 +53,7 @@
         </div>
     </div>
 </header>
-
+<?php if ($_SESSION["empresas"] != ""){?>
 <!-- ========== Left Sidebar Start ========== -->
 <!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
@@ -79,6 +79,7 @@
                         <span data-key="t-apps"><?php echo $language["Extracao"]; ?></span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <?php if ($_SESSION["permission_id"] == 1 ) { ?>
                         <li>
                             <a href="javascript: void(0);" class="has-arrow" data-key="t-projetos"><?php echo $language["Projetos"]; ?></a>
                             <ul class="sub-menu" aria-expanded="true">
@@ -86,6 +87,9 @@
                                 <li><a href="exibir-projetos.php" data-key="t-exibirProjetos"><?php echo $language["Exibir_Projetos_Arquivos"]; ?></a></li>
                             </ul>
                         </li>
+                        <?php
+                        }
+                        ?>
                         <li>
                             <a href="form-wizard.php">
                                 <span data-key="t-form-wizard">
@@ -101,3 +105,6 @@
     </div>
 </div>
 <!-- Left Sidebar End -->
+<?php 
+} 
+?>
