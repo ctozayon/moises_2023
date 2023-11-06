@@ -25,7 +25,15 @@ if (isset($_FILES["file"]) && $_FILES["file"]["error"] === UPLOAD_ERR_OK) {
         echo "Arquivo enviado e movido para 'uploads/' com sucesso.";
 
         // Agora, vamos carregar o arquivo para a AWS aqui...
-        $bucketName = 'mosynicria';
+        if ($empresa == '1') {
+            $bucketName = 'mosynicria';
+        } else if ($empresa == '2') {
+            $bucketName = 'mosynifaza';
+        } else if ($empresa == '3') {
+            $bucketName = 'mosyniarti';    
+        } else {
+            echo("Erro ao selecionar o bucket!");
+        }
         $targetFile = 'uploads/' . $nome_modificado; // Caminho completo do arquivo no servidor local
 
         // Configura as credenciais e a região do seu bucket na AWS
