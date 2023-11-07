@@ -372,13 +372,21 @@ if (isset($_POST['selectedProjeto'])) {
         };
     }
 
+    // Variável para armazenar a referência ao DataTable
+    var dataTable;
+
     $(document).ready(function() {
-        // Inicialize o DataTable
-        var dataTable = $('#datatable').DataTable({
-            "paging": true,
-            "info": true
-            // Adicione outras opções conforme necessário
-        });
+        // Inicialize o DataTable se ainda não foi inicializado
+        if (!$.fn.DataTable.isDataTable('#datatable')) {
+            dataTable = $('#datatable').DataTable({
+                "paging": true,
+                "info": true
+                // Adicione outras opções conforme necessário
+            });
+        } else {
+            // Se já estiver inicializado, apenas atualize a referência
+            dataTable = $('#datatable').DataTable();
+        }
 
         // Salve a referência ao DataTable para uso posterior
         $('#tabela-arquivos').data('datatable', dataTable);
