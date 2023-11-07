@@ -56,8 +56,17 @@ $empresas = $_SESSION['empresas'];
                 
                 <div class="row">
                     <div class="col-12">
+                    <?php if ($_SESSION["empresas"] != ""){?>
                         <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNGZjNzNiOGYtOTg3MC00NmI0LWJjNjUtZDcwMmQ5ZTM3ZmRlIiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9&embedImagePlaceholder=true&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
+                    <?php 
+                    } else {?>
+                        <div class="text-center mb-4">
+                            <h4>Solicite cadastro de vinculo á empresa ao administrador para ter acesso aos recursos da ferramenta!</h4>
+                        </div>
                     </div>
+                    <?php 
+                    }
+                    ?>
                 </div>
             </div>
             <!-- container-fluid -->

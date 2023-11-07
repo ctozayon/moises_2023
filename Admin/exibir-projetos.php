@@ -1,10 +1,9 @@
-<?php include 'layouts/session.php'; ?>
-<?php include_once 'layouts/config.php'; ?>
-
 <?php session_start(); 
 $empresas = $_SESSION['empresas'];?>
 
 <?php
+include_once 'layouts/config.php';
+
 // Função para obter projetos da empresa selecionada
 function getProjetos($selectedEmpresa, $link) {
     $projetos = array();
@@ -74,8 +73,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
         }
     }
 }
-?>
 
+// Seção para carregar arquivos do projeto selecionado
+if (isset($_POST['selectedProjeto'])) {
+    $selectedProjeto = $_POST['selectedProjeto'];
+
+        // Consulta SQL para obter os projetos da Projeto selecionada
+        $sql = "SELECT * FROM file WHERE id_project = '$selectedProjeto'";
+        
+        // Executar a consulta
+        $result = mysqli_query($link, $sql);
+
+        // Verificar se a consulta foi bem-sucedida
+        if ($result) {
+            // Inicializar a variável $arquivos como um array para armazenar os resultados
+            $arquivos = array();
+
+            // Obter os resultados da consulta
+            while ($row = mysqli_fetch_assoc($result)) {
+                // Adicionar cada linha ao array
+                $arquivos[] = $row;
+            }
+
+            // Liberar o resultado da consulta
+            mysqli_free_result($result);
+
+            // Enviar a resposta como JSON
+            header('Content-Type: application/json');
+
+            // Imprime o JSON
+            echo json_encode($arquivos);
+
+            exit(); // Certifique-se de sair após enviar a resposta
+        } else {
+            // Se a consulta falhou, exibir uma mensagem de erro
+            echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+        }
+}
+
+?>
+<?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -153,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
                                             <div class="row">
                                                 <div class="col-md-3">
                                                 <div id="lista-projetos" class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
-                                                    <a class="nav-link" id="v-pills-novopcria-tab" data-bs-toggle="pill" href="#v-pills-novopcria" role="tab" aria-controls="v-pills-novopcria" aria-selected="false" onclick="window.location.href='form-cadastrar_projetos.php'">
+                                                    <a class="nav-link" id="v-pills-novo-tab" data-bs-toggle="pill" href="#v-pills-novo" role="tab" aria-controls="v-pills-novo" aria-selected="false" onclick="window.location.href='form-cadastrar_projetos.php'">
                                                     <i class="bx bx-plus-circle font-size-16 align-middle me-2"></i>Novo Projeto</a>
                                                 </div>
                                                 </div><!-- end col -->
@@ -161,45 +198,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
                                                     <div class="tab-content text-muted mt-4 mt-md-0" id="v-pills-tabContent">
                                                         <div class="tab-pane fade show active" id="v-pills-p1cria" role="tabpanel" aria-labelledby="v-pills-p1cria-tab">
                                                             <p>
-                                                                <div class="table-responsive">
-                                                                    <table id="datatable" class="table table-bordered dt-responsive w-100">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>Nome do arquivo</th>
-                                                                                <th>Link (URL)</th>
-                                                                                <th>Data do Upload</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr>
-                                                                                <td> </td>
-                                                                                <td> </td>
-                                                                                <td> </td>
-                                                                            </tr>
-                                                                            <!-- <tr>
-                                                                                <td>0001+cria+projetofestasaojoao+nfe123456789</td>
-                                                                                <td>https://s3.console.aws.amazon.com/s3/object/mosynicria?region=us-east-1&prefix=001-000015.xml</td>
-                                                                                <td>2023/10/31</td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>0002+faza+projetofestasaojoao+nfe987654321</td>
-                                                                                <td>https://s3.console.aws.amazon.com/s3/object/mosynicria?region=us-east-1&prefix=001-000015.xml</td>
-                                                                                <td>2023/11/01</td>
-                                                                            </tr> -->
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
+                                                            <div class="table-responsive" id="lista-arquivos">
+                                                                <table id="datatable" class="table table-bordered dt-responsive w-100">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Nome do arquivo</th>
+                                                                            <th>Link (URL)</th>
+                                                                            <th>Data do Upload</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody id="tabela-arquivos">
+                                                                        <!-- Conteúdo da tabela aqui -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                             </p>
-                                                        </div>
-                                                        <div class="tab-pane fade" id="v-pills-p2cria" role="tabpanel" aria-labelledby="v-pills-p2cria-tab">
-                                                            <p>
-                                                                Tabela contendo os arquivos do Projeto Cria 2.
-                                                            </p>                                                            
-                                                        </div>
-                                                        <div class="tab-pane fade" id="v-pills-p3cria" role="tabpanel" aria-labelledby="v-pills-p3cria-tab">
-                                                            <p>
-                                                                Tabela contendo os arquivos do Projeto Cria 3.
-                                                            </p>                                                            
                                                         </div>
                                                     </div>
                                                 </div><!--  end col -->
@@ -284,8 +297,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
         }
     }
 
-
-
     function atualizarListaProjetos(projetos) {
         const listaProjetos = document.getElementById('lista-projetos');
         listaProjetos.innerHTML = '';
@@ -295,19 +306,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
             const linkProjeto = document.createElement('a');
             linkProjeto.className = 'nav-link mb-2';
             linkProjeto.href = '#';
-            linkProjeto.textContent = projeto.name; // Certifique-se de que 'name' seja a propriedade correta
+            linkProjeto.onclick = selecionarProjeto(projeto.id); // Use a função como um callback
+            linkProjeto.textContent = projeto.name;
 
             listaProjetos.appendChild(linkProjeto);
         });
 
+
         // Adiciona o link "Novo Projeto"
         const linkNovoProjeto = document.createElement('a');
         linkNovoProjeto.className = 'nav-link mb-2';
-        linkNovoProjeto.id = 'v-pills-novopcria-tab';
+        linkNovoProjeto.id = 'v-pills-novo-tab';
         linkNovoProjeto.setAttribute('data-bs-toggle', 'pill');
-        linkNovoProjeto.href = '#v-pills-novopcria';
         linkNovoProjeto.setAttribute('role', 'tab');
-        linkNovoProjeto.setAttribute('aria-controls', 'v-pills-novopcria');
+        linkNovoProjeto.setAttribute('aria-controls', 'v-pills-novo');
         linkNovoProjeto.setAttribute('aria-selected', 'false');
         linkNovoProjeto.setAttribute('onclick', "window.location.href='form-cadastrar_projetos.php'");
         
@@ -319,6 +331,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresa'])) {
 
         listaProjetos.appendChild(linkNovoProjeto);
     }
+
+    function selecionarProjeto(idProjeto) {
+        return function () {
+            // Envia o formulário via AJAX
+            var formData = new FormData();
+            formData.append('selectedProjeto', idProjeto);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', window.location.href, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        try {
+                            var responseText = xhr.responseText.trim();
+                            var cleanedResponse = responseText.replace(/\n/g, '').trim();
+                            console.log(cleanedResponse);
+                            if (cleanedResponse !== '') {
+                                // Tentar fazer o parse novamente
+                                try {
+                                    var arquivos = JSON.parse(cleanedResponse);
+                                    console.log("Array parseado:", arquivos);
+                                } catch (error) {
+                                    console.error("Erro ao fazer o parse JSON:", error);
+                                }
+                                atualizarListaArquivos(arquivos);
+                            } else {
+                                console.error('Resposta JSON vazia ou inválida.');
+                            }
+                        } catch (error) {
+                            console.error('Erro ao analisar JSON:', error);
+                        }
+                    } else {
+                        console.error('Erro na solicitação:', xhr.status);
+                    }
+                }
+            };
+
+            xhr.send(formData);
+        };
+    }
+
+    function atualizarListaArquivos(arquivos) {
+        const listaArquivos = document.getElementById('tabela-arquivos');
+        listaArquivos.innerHTML = '';
+
+        // Adiciona uma linha na tabela para cada arquivo na resposta
+        arquivos.forEach(arquivo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${arquivo.name}</td>
+                <td>${arquivo.link}</td>
+                <td>${arquivo.upload_date}</td>
+            `;
+            listaArquivos.appendChild(row);
+        });
+
+        // Obtenha a referência ao DataTable salva
+        var dataTable = $('#datatable').data('datatable');
+
+        // Atualize os dados do DataTable
+        dataTable.clear();
+        dataTable.rows.add(listaArquivos).draw();
+    }
+
+
 </script>
 </body>
 
