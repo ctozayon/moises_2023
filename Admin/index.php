@@ -1,8 +1,10 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
-<?php session_start(); 
-$empresas = $_SESSION['empresas'];
+<?php
+if (isset($_SESSION['empresas']) && $_SESSION['empresas'] != ""){
+    $empresas = $_SESSION['empresas'];
+}
 ?>
 
 <head>
@@ -56,7 +58,7 @@ $empresas = $_SESSION['empresas'];
                 
                 <div class="row">
                     <div class="col-12">
-                    <?php if ($_SESSION["empresas"] != ""){?>
+                    <?php if (isset($empresas) && $empresas != ""){?>
                         <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNGZjNzNiOGYtOTg3MC00NmI0LWJjNjUtZDcwMmQ5ZTM3ZmRlIiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9&embedImagePlaceholder=true&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
                     <?php 
                     } else {?>
