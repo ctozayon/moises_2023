@@ -372,29 +372,50 @@ if (isset($_POST['selectedProjeto'])) {
         };
     }
 
+    // Variável para armazenar a referência ao DataTable
+    var dataTable;
+
+    $(document).ready(function() {
+        // Inicialize o DataTable se ainda não foi inicializado
+        if (!$.fn.DataTable.isDataTable('#datatable')) {
+            dataTable = $('#datatable').DataTable({
+                "paging": true,
+                "info": true
+                // Adicione outras opções conforme necessário
+            });
+        } else {
+            // Se já estiver inicializado, apenas atualize a referência
+            dataTable = $('#datatable').DataTable();
+        }
+
+        // Salve a referência ao DataTable para uso posterior
+        $('#tabela-arquivos').data('datatable', dataTable);
+    });
+
     function atualizarListaArquivos(arquivos) {
-        const listaArquivos = document.getElementById('tabela-arquivos');
-        listaArquivos.innerHTML = '';
-
-        // Adiciona uma linha na tabela para cada arquivo na resposta
-        arquivos.forEach(arquivo => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${arquivo.name}</td>
-                <td>${arquivo.link}</td>
-                <td>${arquivo.upload_date}</td>
-            `;
-            listaArquivos.appendChild(row);
-        });
-
         // Obtenha a referência ao DataTable salva
-        var dataTable = $('#datatable').data('datatable');
+        var dataTable = $('#tabela-arquivos').data('datatable');
 
-        // Atualize os dados do DataTable
-        dataTable.clear();
-        dataTable.rows.add(listaArquivos).draw();
+        // Verifique se o DataTable foi inicializado
+        if (dataTable) {
+            // Limpe os dados existentes no DataTable
+            dataTable.clear();
+
+            // Adicione os novos dados ao DataTable
+            arquivos.forEach(arquivo => {
+                dataTable.row.add([
+                    arquivo.name,
+                    arquivo.link,
+                    arquivo.upload_date
+                ]);
+            });
+
+            // Atualize o DataTable
+            dataTable.draw();
+        } else {
+            console.error('Erro: DataTable não inicializado.');
+        }
     }
-
 
 </script>
 </body>
