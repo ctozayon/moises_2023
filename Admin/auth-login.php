@@ -34,9 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT U.id, U.username, U.firstname, U.password, UP.permission_id, P.description FROM users U
-        join user_permissions UP on U.id = UP.user_id
-        join permissions P on UP.permission_id = P.id
+        $sql = "SELECT U.id, U.username, U.firstname, U.password, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
+        FROM users U
+        LEFT JOIN user_permissions UP ON U.id = UP.user_id
+        LEFT JOIN permissions P ON UP.permission_id = P.id
         WHERE U.username = ?";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
@@ -95,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $sql = "SELECT * FROM company";
         } else {
             $sql = "SELECT C.id, C.name FROM company C
-            join company_user CU on C.id = CU.id_company
+            left join company_user CU on C.id = CU.id_company
             WHERE CU.id_user = " . $_SESSION["user_id"];
         }
     
@@ -112,7 +113,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             while ($row = mysqli_fetch_assoc($result)) {
                 // Adicionar cada linha ao array
                 $empresas[] = $row;
+            }
+
+            if ($empresas){
                 $_SESSION["empresas"] = $empresas;
+            }
+            else{
+                $_SESSION["empresas"] = "";
             }
     
             // Liberar o resultado da consulta
