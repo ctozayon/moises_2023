@@ -53,7 +53,12 @@
         </div>
     </div>
 </header>
-<?php if ($_SESSION["empresas"] != ""){?>
+
+<?php 
+session_start(); 
+$empresas = $_SESSION['empresas'];
+
+if (isset($empresas) && $empresas != ""){?>
 <!-- ========== Left Sidebar Start ========== -->
 <!-- ========== Left Sidebar Start ========== -->
 <div class="vertical-menu">
