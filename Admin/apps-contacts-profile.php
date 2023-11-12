@@ -2,8 +2,15 @@
 <?php include 'layouts/head-main.php'; ?>
 
 <?php
+$useremail = $_SESSION["useremail"];
+$username = $_SESSION["username"];
 $firstname = $_SESSION["firstname"];
 $lastname = $_SESSION["lastname"];
+$cpf = $_SESSION["cpf"];
+$phone = $_SESSION["phone"];
+$cep = $_SESSION["cep"];
+$address = $_SESSION["address"];
+$birth_date = $_SESSION["birth_date"];
 $fullname = $firstname . " " . $lastname;
 $permission = $_SESSION["permission"];
 $empresas = $_SESSION["empresas"];
@@ -109,61 +116,61 @@ $empresas = $_SESSION["empresas"];
                                     <form class="needs-validation mt-4 pt-2" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                                         <div class="mb-3 <?php echo (!empty($useremail_err)) ? 'has-error' : ''; ?>">
                                             <label for="useremail" class="form-label">Email</label>
-                                            <input type="email" class="form-control" id="useremail" placeholder="Insira seu email" required name="useremail" value="<?php echo $useremail; ?>">
+                                            <input type="email" class="form-control" id="useremail" placeholder="<?php echo $useremail ?>" required name="useremail" value="<?php echo $useremail; ?>">
                                             <span class="text-danger"><?php echo $useremail_err; ?></span>
                                         </div>
 
                                         <div class="mb-3 <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
-                                            <label for="username" class="form-label">Nome de usuário</label>
-                                            <input type="text" class="form-control" id="username" placeholder="Insira seu nome de usuário" required name="username" value="<?php echo $username; ?>">
+                                            <label for="username" class="form-label">Usuário</label>
+                                            <input type="text" class="form-control" id="username" placeholder="<?php echo $username ?>" required name="username" value="<?php echo $username; ?>">
                                             <span class="text-danger"><?php echo $username_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="firstname" class="form-label">Primeiro nome</label>
-                                            <input type="text" class="form-control" id="firstname" placeholder="Insira seu primeiro nome" required name="firstname" value="<?php echo $firstname; ?>">
+                                            <input type="text" class="form-control" id="firstname" placeholder="<?php echo $firstname ?>" required name="firstname" value="<?php echo $firstname; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $firstname_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="lastname" class="form-label">Último nome</label>
-                                            <input type="text" class="form-control" id="lastname" placeholder="Insira seu último nome" required name="lastname" value="<?php echo $lastname; ?>">
+                                            <input type="text" class="form-control" id="lastname" placeholder="<?php echo $lastname ?>" required name="lastname" value="<?php echo $lastname; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $lastname_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="cpf" class="form-label">CPF</label>
-                                            <input type="text" class="form-control" id="cpf" placeholder="Insira seu último nome" required name="cpf" value="<?php echo $cpf; ?>">
+                                            <input type="text" class="form-control" id="cpf" placeholder="<?php echo $cpf ?>" required name="cpf" value="<?php echo $cpf; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $cpf_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="phone" class="form-label">Telefone</label>
-                                            <input type="text" class="form-control" id="phone" placeholder="Insira seu último nome" required name="phone" value="<?php echo $phone; ?>">
+                                            <input type="text" class="form-control" id="phone" placeholder="<?php echo $phone ?>" required name="phone" value="<?php echo $phone; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $phone_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="cep" class="form-label">CEP</label>
-                                            <input type="text" class="form-control" id="cep" placeholder="Insira seu último nome" required name="cep" value="<?php echo $cep; ?>">
+                                            <input type="text" class="form-control" id="cep" placeholder="<?php echo $cep ?>" required name="cep" value="<?php echo $cep; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $cep_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="address" class="form-label">Endereço</label>
-                                            <input type="text" class="form-control" id="address" placeholder="Insira seu último nome" required name="address" value="<?php echo $address; ?>">
+                                            <input type="text" class="form-control" id="address" placeholder="<?php echo $address ?>" required name="address" value="<?php echo $address; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $address_err; ?></span>
                                         </div>
 
                                         <div class="mb-3">
                                             <label for="birth_date" class="form-label">Data de Nascimento</label>
-                                            <input type="text" class="form-control" id="birth_date" placeholder="Insira seu último nome" required name="birth_date" value="<?php echo $birth_date; ?>">
+                                            <input type="text" class="form-control" id="birth_date" placeholder="<?php echo $birth_date ?>" required name="birth_date" value="<?php echo $birth_date; ?>">
                                             <!-- Adicionando uma mensagem de erro para validação -->
                                             <span class="text-danger"><?php echo $birth_date_err; ?></span>
                                         </div>

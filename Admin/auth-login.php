@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT U.id, U.username, U.firstname, U.lastname, U.cpf, U.phone, U.cep, U.address, U.birth_date, U.password, UP.permission_id, P.description FROM users U
+        $sql = "SELECT U.id, U.useremail, U.username, U.firstname, U.lastname, U.cpf, U.phone, U.cep, U.address, U.birth_date, U.password, UP.permission_id, P.description FROM users U
         join user_permissions UP on U.id = UP.user_id
         join permissions P on UP.permission_id = P.id
         WHERE U.username = ?";
@@ -54,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if username exists, if yes then verify password
                 if (mysqli_stmt_num_rows($stmt) == 1) {
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $firstname, $lastname, $cpf, $phone, $cep, $address, $birth_date , $hashed_password, $permission_id, $permission);
+                    mysqli_stmt_bind_result($stmt, $id, $useremail, $username, $firstname, $lastname, $cpf, $phone, $cep, $address, $birth_date , $hashed_password, $permission_id, $permission);
                     if (mysqli_stmt_fetch($stmt)) {
                         if (password_verify($password, $hashed_password)) {
                             // Password is correct, so start a new session
@@ -63,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["user_id"] = $id;
+                            $_SESSION["useremail"] = $useremail;
                             $_SESSION["username"] = $username;
                             $_SESSION["firstname"] = $firstname;
                             $_SESSION["cpf"] = $cpf;
