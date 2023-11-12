@@ -25,7 +25,10 @@ USE `minia_php` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `minia_php`.`company` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(255) NOT NULL)
+  `name` VARCHAR(255) NOT NULL,
+  `cnpj` VARCHAR(255) NULL DEFAULT NULL,
+  `cep` VARCHAR(255),
+  `address` VARCHAR(255))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
@@ -40,6 +43,11 @@ CREATE TABLE IF NOT EXISTS `minia_php`.`users` (
   `username` VARCHAR(255) NOT NULL UNIQUE,
   `firstname` VARCHAR(255) NULL DEFAULT NULL,
   `lastname` VARCHAR(255) NULL DEFAULT NULL,
+  `cpf` VARCHAR(255) NULL DEFAULT NULL,
+  `phone` VARCHAR(255) NULL DEFAULT NULL,
+  `cep` VARCHAR(255) NULL DEFAULT NULL,
+  `adress` VARCHAR(255) NULL DEFAULT NULL,
+  `birth_date` DATE NULL DEFAULT NULL,
   `password` VARCHAR(255) NOT NULL,
   `token` VARCHAR(255) NULL DEFAULT NULL,
   `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP
@@ -191,11 +199,20 @@ COLLATE = utf8mb4_0900_ai_ci;
 -- -----------------------------------------------------
 -- Create default permissions
 -- -----------------------------------------------------
-INSERT INTO permissions (description) VALUES
-  ('admin'),
-  ('geral'),
-  ('limitado');
+INSERT INTO minia_php.permissions (description)
+VALUES ('admin'), ('geral'), ('limitado');
 
+-- ALTER TABLE `minia_php`.`users`
+-- ADD COLUMN `cnpj` VARCHAR(255) NULL DEFAULT NULL,
+-- ADD COLUMN `cep` VARCHAR(255),
+-- ADD COLUMN `address` VARCHAR(255);
+
+-- ALTER TABLE `minia_php`.`company`
+-- ADD COLUMN `cpf` VARCHAR(255) NULL DEFAULT NULL,
+-- ADD COLUMN `phone` VARCHAR(255) NULL DEFAULT NULL,
+-- ADD COLUMN `cep` VARCHAR(255) NULL DEFAULT NULL,
+-- ADD COLUMN `adress` VARCHAR(255) NULL DEFAULT NULL,
+-- ADD COLUMN `birth_date` DATE NULL DEFAULT NULL;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
