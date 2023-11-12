@@ -1,9 +1,17 @@
 <?php include 'layouts/session.php'; ?>
 <?php include 'layouts/head-main.php'; ?>
 
+<?php
+$firstname = $_SESSION["firstname"];
+$lastname = $_SESSION["lastname"];
+$fullname = $firstname . " " . $lastname;
+$permission = $_SESSION["permission"];
+$empresas = $_SESSION["empresas"];
+?>
+
 <head>
     
-    <title>Profile | Minia - Admin & Dashboard Template</title>
+    <title>Perfil</title>
     <?php include 'layouts/head.php'; ?>
     <?php include 'layouts/head-style.php'; ?>
 
@@ -28,12 +36,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0 font-size-18">Profile</h4>
+                            <h4 class="mb-sm-0 font-size-18">Perfil</h4>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Contact</a></li>
-                                    <li class="breadcrumb-item active">Profile</li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">Contato</a></li>
+                                    <li class="breadcrumb-item active">Perfil</li>
                                 </ol>
                             </div>
 
@@ -51,17 +59,20 @@
                                         <div class="d-flex align-items-start mt-3 mt-sm-0">
                                             <div class="flex-shrink-0">
                                                 <div class="avatar-xl me-3">
-                                                    <img src="assets/images/users/avatar-2.jpg" alt="" class="img-fluid rounded-circle d-block">
+                                                    <img src="assets/images/users/avatar-1.png" alt="" class="img-fluid rounded-circle d-block">
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
                                                 <div>
-                                                    <h5 class="font-size-16 mb-1">Phyllis Gatlin</h5>
-                                                    <p class="text-muted font-size-13">Full Stack Developer</p>
-
+                                                    <h5 class="font-size-16 mb-1"><?php echo($fullname) ?></h5>
+                                                    <p class="text-muted font-size-13"><?php echo(ucfirst($permission)) ?></p>
+                                                    <h6>Empresas Vinculadas:</h6></br>
                                                     <div class="d-flex flex-wrap align-items-start gap-2 gap-lg-3 text-muted font-size-13">
-                                                        <div><i class="mdi mdi-circle-medium me-1 text-success align-middle"></i>Development</div>
-                                                        <div><i class="mdi mdi-circle-medium me-1 text-success align-middle"></i>phyllisgatlin@minia.com</div>
+                                                        <?php
+                                                        foreach ($empresas as $empresa) {
+                                                            echo "<div><i class='mdi mdi-circle-medium me-1 text-success align-middle'></i>" . $empresa['name'] . "</div>";
+                                                        }
+                                                        ?>
                                                     </div>
                                                 </div>
                                             </div>
