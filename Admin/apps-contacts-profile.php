@@ -83,7 +83,7 @@ $empresas = $_SESSION["empresas"];
                                     <div class="col-sm-auto order-1 order-sm-2">
                                         <div class="d-flex align-items-start justify-content-end gap-2">
                                             <div>
-                                                <button type="button" class="btn btn-soft-light"><i class="me-1"></i> Message</button>
+                                                <button id="btnEditar" type="button" class="btn btn-soft-light"><i class="me-1"></i> Editar perfil </button>
                                             </div>
                                             <div>
                                                 <div class="dropdown">
@@ -100,7 +100,83 @@ $empresas = $_SESSION["empresas"];
                                         </div>
                                     </div>
                                 </div>
+                                <?php if (isset($_GET['editar']) && $_GET['editar'] === 'true'): ?>
+                                    <div class="auth-content my-auto">
+                                    <div class="text-center">
+                                        <h5 class="mb-0">Editar usuário</h5>
+                                        <p class="text-muted mt-2">Edite abaixo os campos que forem necessários</p>
+                                    </div>
+                                    <form class="needs-validation mt-4 pt-2" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                                        <div class="mb-3 <?php echo (!empty($useremail_err)) ? 'has-error' : ''; ?>">
+                                            <label for="useremail" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="useremail" placeholder="Insira seu email" required name="useremail" value="<?php echo $useremail; ?>">
+                                            <span class="text-danger"><?php echo $useremail_err; ?></span>
+                                        </div>
 
+                                        <div class="mb-3 <?php echo (!empty($username_err)) ? 'has-error' : ''; ?>">
+                                            <label for="username" class="form-label">Nome de usuário</label>
+                                            <input type="text" class="form-control" id="username" placeholder="Insira seu nome de usuário" required name="username" value="<?php echo $username; ?>">
+                                            <span class="text-danger"><?php echo $username_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="firstname" class="form-label">Primeiro nome</label>
+                                            <input type="text" class="form-control" id="firstname" placeholder="Insira seu primeiro nome" required name="firstname" value="<?php echo $firstname; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $firstname_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="lastname" class="form-label">Último nome</label>
+                                            <input type="text" class="form-control" id="lastname" placeholder="Insira seu último nome" required name="lastname" value="<?php echo $lastname; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $lastname_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="cpf" class="form-label">CPF</label>
+                                            <input type="text" class="form-control" id="cpf" placeholder="Insira seu último nome" required name="cpf" value="<?php echo $cpf; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $cpf_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="phone" class="form-label">Telefone</label>
+                                            <input type="text" class="form-control" id="phone" placeholder="Insira seu último nome" required name="phone" value="<?php echo $phone; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $phone_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="cep" class="form-label">CEP</label>
+                                            <input type="text" class="form-control" id="cep" placeholder="Insira seu último nome" required name="cep" value="<?php echo $cep; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $cep_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="address" class="form-label">Endereço</label>
+                                            <input type="text" class="form-control" id="address" placeholder="Insira seu último nome" required name="address" value="<?php echo $address; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $address_err; ?></span>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="birth_date" class="form-label">Data de Nascimento</label>
+                                            <input type="text" class="form-control" id="birth_date" placeholder="Insira seu último nome" required name="birth_date" value="<?php echo $birth_date; ?>">
+                                            <!-- Adicionando uma mensagem de erro para validação -->
+                                            <span class="text-danger"><?php echo $birth_date_err; ?></span>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <p class="mb-0">Atualizando você concorda com os <a href="#" class="text-primary">Termos de Uso</a></p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <button class="btn btn-primary w-100 waves-effect waves-light" type="submit">Salvar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <?php endif ?>
                                 <!-- <ul class="nav nav-tabs-custom card-header-tabs border-top mt-4" id="pills-tab" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link px-3 active" data-bs-toggle="tab" href="#overview" role="tab">Overview</a>
@@ -141,6 +217,14 @@ $empresas = $_SESSION["empresas"];
 <!-- JAVASCRIPT -->
 
 <?php include 'layouts/vendor-scripts.php'; ?>
+
+<script>
+// Adiciona um ouvinte de clique ao botão
+document.getElementById('btnEditar').addEventListener('click', function() {
+    // Redireciona para a mesma página com a variável 'editar' definida como 'true'
+    window.location.href = window.location.pathname + '?editar=true';
+});
+</script>
 
 <script src="assets/js/app.js"></script>
 
