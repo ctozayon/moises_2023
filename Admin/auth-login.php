@@ -1,14 +1,13 @@
 <?php
-// Initialize the session
-session_start();
+
+// Include config file
+require_once "layouts/config.php";
 
 // Check if the user is already logged in, if yes then redirect him to index page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true) {
     header("location: index.php");
     exit;
 }
-// Include config file
-require_once "layouts/config.php";
 
 // Define variables and initialize with empty values
 $username = $password = "";
@@ -34,10 +33,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT U.id, U.useremail, U.username, U.firstname, U.lastname, U.cpf, U.phone, U.cep, U.address, U.birth_date, U.password, UP.permission_id, P.description FROM users U
-        join user_permissions UP on U.id = UP.user_id
-        join permissions P on UP.permission_id = P.id
+        $sql = "SELECT U.id, U.useremail, U.username, U.firstname, U.lastname, U.cpf, U.phone, U.cep, U.address, U.birth_date, U.password, UP.permission_id, P.description 
+        FROM users U
+        JOIN user_permissions UP on U.id = UP.user_id
+        JOIN permissions P on UP.permission_id = P.id
         WHERE U.username = ?";
+
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
@@ -56,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     // Bind result variables
                     mysqli_stmt_bind_result($stmt, $id, $useremail, $username, $firstname, $lastname, $cpf, $phone, $cep, $address, $birth_date , $hashed_password, $permission_id, $permission);
                     if (mysqli_stmt_fetch($stmt)) {
+                        $_SESSION["loggedin"] = false;
                         if (password_verify($password, $hashed_password)) {
                             // Password is correct, so start a new session
                             session_start();
@@ -95,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    if ($_SESSION["loggedin"] = true) {
+    if ($_SESSION["loggedin"] === true) {
         // Consulta SQL
 
         if ($_SESSION["permission_id"] == 1 || $_SESSION["permission_id"] == 2) {
@@ -185,8 +187,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </div>
 
                                         <div class="input-group auth-pass-inputgroup">
-                                            <input type="password" class="form-control" placeholder="Enter password" name="password" aria-label="Password" aria-describedby="password-addon">
-                                            <span class="text-danger"><?php echo $password_err; ?></span>
+                                            <input type="password" class="form-control" placeholder="<?php echo $password_err; ?>" name="password" aria-label="Password" aria-describedby="password-addon">
+                                            <!-- <span class="text-danger"><?php echo $password_err; ?></span> -->
                                             <button class="btn btn-light ms-0" type="button" id="password-addon"><i class="mdi mdi-eye-outline"></i></button>
                                         </div>
                                     </div>
