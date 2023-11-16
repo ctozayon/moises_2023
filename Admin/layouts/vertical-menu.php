@@ -79,7 +79,7 @@ if (isset($empresas) && $empresas != ""){?>
                 </li>
 
                 <li>
-                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu">
+                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-extracao">
                         <i data-feather="cloud-drizzle"></i>
                         <span data-key="t-apps"><?php echo $language["Extracao"]; ?></span>
                     </a>
@@ -99,6 +99,29 @@ if (isset($empresas) && $empresas != ""){?>
                             <a href="form-wizard.php">
                                 <span data-key="t-form-wizard">
                                     <?php echo $language["CargaDados"]; ?>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-administracao">
+                        <i data-feather="sliders"></i>
+                        <span data-key="t-administracao"><?php echo $language["Administracao"]; ?></span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li>
+                            <a href="gestao_empresa.php">
+                                <span data-key="t-gestao-empresa">
+                                    <?php echo $language["GestaoEmpresas"]; ?>
+                                </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="gestao_usuarios.php">
+                                <span data-key="t-form-wizard">
+                                    <?php echo $language["GestaoUsuarios"]; ?>
                                 </span>
                             </a>
                         </li>
