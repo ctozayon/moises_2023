@@ -244,6 +244,15 @@
                                         <p>(11)99999-9999</p>
                                     </div>
                                 </div>
+                                <div class="row mb-4">
+                                    <label for="horizontal-empresas-vinculadas" class="col-sm-3 col-form-label">Empresas vinculadas</label>
+                                    <div class="col-sm-9">
+                                        <div class="d-flex flex-wrap gap-2 mt-1">
+                                            <span class="badge rounded-pill bg-warning">Cria</span>
+                                            <span class="badge rounded-pill bg-danger">Faza</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div><!-- end card-body -->
                         </div><!-- end card -->
                     </div><!-- end col -->
