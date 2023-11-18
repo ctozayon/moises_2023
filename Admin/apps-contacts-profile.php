@@ -92,7 +92,7 @@ $empresas = $_SESSION["empresas"];
                                             <div>
                                                 <button id="btnEditar" type="button" class="btn btn-soft-light"><i class="me-1"></i> Editar perfil </button>
                                             </div>
-                                            <div>
+                                            <!-- <div>
                                                 <div class="dropdown">
                                                     <button class="btn btn-link font-size-16 shadow-none text-muted dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <i class="bx bx-dots-horizontal-rounded"></i>
@@ -103,7 +103,7 @@ $empresas = $_SESSION["empresas"];
                                                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                                                     </ul>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
