@@ -1,4 +1,8 @@
-<?php include 'layouts/session.php'; ?>
+<?php include 'layouts/session.php'; 
+session_start();
+$empresas = $_SESSION['empresas'];
+echo json_encode($empresas)?>
+
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -10,14 +14,6 @@
 </head>
 
 <?php include 'layouts/body.php'; ?>
-
-<?php
-$estados = array(
-    'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS',
-    'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC',
-    'SP', 'SE', 'TO'
-);
-?>
 
 <!-- Begin page -->
 <div id="layout-wrapper">
@@ -62,42 +58,17 @@ $estados = array(
                             <div class="card-body">                            
                                 <div class="table-responsive">
                                     <table class="table mb-0">
-
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Nome da Empresa</th>
                                                 <th>CNPJ</th>
-                                                <th>Estado</th>
-                                                <th>Cidade</th>
+                                                <th>CEP</th>
                                                 <th>Endereço</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Cria</td>
-                                                <td>1234567/0001-10</td>
-                                                <td>PR</td>
-                                                <td>Curitiba</td>
-                                                <td>Rua Maria das Dores, 143</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Faza</td>
-                                                <td>7654321/0001-90</td>
-                                                <td>MG</td>
-                                                <td>Belo Horizonte</td>
-                                                <td>Rua José das Coves, 752</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Arti</td>
-                                                <td>9753124/0001-34</td>
-                                                <td>SP</td>
-                                                <td>Campinas</td>
-                                                <td>Avenida XV de Novembro, 1243</td>
-                                            </tr>
+                                        <tbody id="tabela-empresas">
+                                            <!-- Conteúdo da tabela aqui -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -128,26 +99,21 @@ $estados = array(
                                         </div>
                                     </div>
                                     <div class="row mb-4">
-                                        <label for="horizontal-estado" class="col-sm-3 col-form-label">Estado</label>
+                                        <label for="cep" class="col-sm-3 col-form-label">CEP</label>
                                         <div class="col-sm-9">
-                                            <select class="form-select col-sm-9" id="horizontal-estado" name="estado">
-                                                <?php
-                                                foreach ($estados as $estado) { ?>
-                                                    <option> <?php echo $estado ?> </option>
-                                                <?php } ?>
-                                            </select>
+                                            <input type="text" class="form-control" id="cep" placeholder="Digite o CEP">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
-                                        <label for="horizontal-cidade" class="col-sm-3 col-form-label">Cidade</label>
+                                        <label for="numero" class="col-sm-3 col-form-label">Número</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="horizontal-cidade" placeholder="Digite a cidade">
+                                            <input type="text" class="form-control" id="numero" placeholder="Digite o número">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
-                                        <label for="horizontal-endereco" class="col-sm-3 col-form-label">Endereço</label>
+                                        <label for="address" class="col-sm-3 col-form-label">Endereço</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="horizontal-endereco" placeholder="Digite o endereço">
+                                            <input type="text" class="form-control" id="address" required name="address" value="<?php echo $address; ?>">
                                         </div>
                                     </div>
 
@@ -193,6 +159,135 @@ $estados = array(
 <?php include 'layouts/vendor-scripts.php'; ?>
 
 <script src="assets/js/app.js"></script>
+
+<!-- Adicionando JQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<!-- Adicionando Javascript -->
+<script>
+
+$(document).ready(function() {
+
+    function limpa_formulário_cep() {
+        // Limpa valores do formulário de cep.
+        $("#rua").val("");
+        $("#numero").val("");
+        $("#bairro").val("");
+        $("#cidade").val("");
+        $("#uf").val("");
+        $("#address").val("");
+    }
+
+    // Quando o campo cep perde o foco.
+    $("#cep").blur(function() {
+
+        // Nova variável "cep" somente com dígitos.
+        var cep = $(this).val().replace(/\D/g, '');
+
+        // Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            // Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            // Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                // Preenche os campos com "..." enquanto consulta webservice.
+                // $("#rua").val("...");
+                // $("#numero").val("...");
+                // $("#bairro").val("...");
+                // $("#cidade").val("...");
+                // $("#uf").val("...");
+                $("#address").val("...");
+
+                // Consulta o webservice viacep.com.br/
+                $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                    if (!("erro" in dados)) {
+                        // Atualiza os campos com os valores da consulta.
+                        // $("#rua").val(dados.logradouro);
+                        // $("#bairro").val(dados.bairro);
+                        // $("#cidade").val(dados.localidade);
+                        // $("#uf").val(dados.uf);
+
+                        // Adiciona um evento de escuta para o campo número.
+                        $("#numero").on('input', function() {
+                            // Atualiza dinamicamente o campo de endereço completo.
+                            $("#address").val(dados.logradouro + ", " + $(this).val() + ", " + dados.bairro + ", " + dados.localidade + " - " + dados.uf);
+                            console.log($("#address").val());
+                        });
+
+                        // Atualiza inicialmente o campo de endereço completo.
+                        $("#address").val(dados.logradouro + ", " + $("#numero").val() + ", " + dados.bairro + ", " + dados.localidade + " - " + dados.uf);
+                        console.log($("#address").val());
+                    } else {
+                        // CEP pesquisado não foi encontrado.
+                        limpa_formulário_cep();
+                        alert("CEP não encontrado.");
+                    }
+                });
+            } else {
+                // CEP é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } else {
+            // CEP sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    });
+});
+
+// Variável para armazenar a referência ao DataTable
+var dataTable;
+
+$(document).ready(function() {
+    // Inicialize o DataTable se ainda não foi inicializado
+    if (!$.fn.DataTable.isDataTable('#datatable')) {
+        dataTable = $('#datatable').DataTable({
+            "paging": true,
+            "info": true
+            // Adicione outras opções conforme necessário
+        });
+    } else {
+        // Se já estiver inicializado, apenas atualize a referência
+        dataTable = $('#datatable').DataTable();
+    }
+
+    // Salve a referência ao DataTable para uso posterior
+    $('#tabela-empresas').data('datatable', dataTable);
+});
+
+function atualizarListaEmpresas(empresas) {
+    // Obtenha a referência ao DataTable salva
+    var dataTable = $('#tabela-empresas').data('datatable');
+
+    // Verifique se o DataTable foi inicializado
+    if (dataTable) {
+        // Limpe os dados existentes no DataTable
+        dataTable.clear();
+
+        // Adicione os novos dados ao DataTable
+        empresas.forEach(empresa => {
+            dataTable.row.add([
+                empresa.name,
+                empresa.cnpj,
+                empresa.cep,
+                empresa.address
+            ]);
+        });
+
+        // Atualize o DataTable
+        dataTable.draw();
+    } else {
+        console.error('Erro: DataTable não inicializado.');
+    }
+}
+
+
+</script>
 
 </body>
 

@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($_SESSION["permission_id"] == 1 || $_SESSION["permission_id"] == 2) {
             $sql = "SELECT * FROM company";
         } else {
-            $sql = "SELECT C.id, C.name FROM company C
+            $sql = "SELECT C.id, C.name, C.cnpj, C.cep, C.address FROM company C
             left join company_user CU on C.id = CU.id_company
             WHERE CU.id_user = " . $_SESSION["user_id"];
         }
