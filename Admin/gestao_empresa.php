@@ -1,7 +1,71 @@
 <?php include 'layouts/session.php'; 
 session_start();
-$empresas = $_SESSION['empresas'];
 
+include 'layouts/config.php';
+
+// Se o formulário de detalhes do projeto foi enviado
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Recupera os dados do formulário
+    $name = $_POST['name'];
+    $cnpj = $_POST['cnpj'];
+    $cep = $_POST['cep'];
+    $address = $_POST['address'];
+
+    // Insira os dados na tabela de subprojetos (sub_project)
+    $sql = "INSERT INTO minia_php.company 
+            (name, cnpj, cep, address)
+            VALUES ('$name', '$cnpj', '$cep', '$address')";
+
+    // Execute a consulta SQL usando a conexão com o banco de dados
+    $result = mysqli_query($link, $sql);
+
+    // Se a consulta foi bem-sucedida, você pode retornar uma resposta de sucesso
+    if ($result) {
+        echo "Detalhes do projeto inseridos com sucesso!";
+    } else {
+        // Se a consulta falhou, você pode retornar uma mensagem de erro
+        echo "Erro ao inserir detalhes do projeto: " . mysqli_error($link);
+    }
+
+    // Atualiza empresas
+    $sql = "SELECT * FROM company";
+
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
+    
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável empresa como um array para armazenar os resultados
+        $empresas = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $empresas[] = $row;
+        }
+
+        if ($empresas){
+            $_SESSION["empresas"] = $empresas;
+        }
+        else{
+            $_SESSION["empresas"] = "";
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
+        var_dump($empresas);
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo "Erro na consulta: " . mysqli_error($link);
+    }
+
+    // Certifique-se de fechar a conexão com o banco de dados, se aplicável
+    mysqli_close($link);
+}
+
+$empresas = $_SESSION['empresas'];
 // Verifique se $empresas está definido antes de usar json_encode
 if (isset($empresas)) {
     echo json_encode($empresas);
@@ -9,6 +73,7 @@ if (isset($empresas)) {
     // Lidere com a situação em que $empresas não está definido
     echo json_encode([]);
 }
+
 ?>
 
 <?php include 'layouts/head-main.php'; ?>
@@ -100,23 +165,23 @@ if (isset($empresas)) {
                             </div><!-- end card header-->
 
                             <div class="card-body">
-                                <form>
+                                <form id="detalhesEmpresaForm">
                                     <div class="row mb-4">
-                                        <label for="horizontal-nome-empresa" class="col-sm-3 col-form-label">Nome da empresa</label>
+                                        <label for="name" class="col-sm-3 col-form-label">Nome da empresa</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="horizontal-nome-empresa" placeholder="Digite o nome da empresa">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Digite o nome da empresa">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
-                                        <label for="horizontal-cnpj" class="col-sm-3 col-form-label">CNPJ</label>
+                                        <label for="cnpj" class="col-sm-3 col-form-label">CNPJ</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="horizontal-cnpj" placeholder="Digite o CNPJ">
+                                            <input type="text" class="form-control" id="cnpj" name="cnpj" placeholder="Digite o CNPJ">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
                                         <label for="cep" class="col-sm-3 col-form-label">CEP</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="cep" placeholder="Digite o CEP">
+                                            <input type="text" class="form-control" id="cep" name="cep" placeholder="Digite o CEP">
                                         </div>
                                     </div>
                                     <div class="row mb-4">
@@ -273,50 +338,87 @@ $(document).ready(function() {
         }
     });
 });
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('detalhesEmpresaForm').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-// Variável para armazenar a referência ao DataTable
-var dataTable;
+        // Recupera os dados do formulário
+        var formData = new FormData(this);
 
-// Inicialize o DataTable se ainda não foi inicializado
-if (!$.fn.DataTable.isDataTable('#datatable')) {
-    dataTable = $('#datatable').DataTable({
-        "paging": true,
-        "info": true
-        // Adicione outras opções conforme necessário
+        // Cria uma instância do objeto XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Configura a requisição
+        xhr.open('POST', window.location.href, true);
+
+        // Define o tipo de dados esperado na resposta como JSON
+        xhr.responseType = 'json';
+
+        // Manipula o estado da requisição
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    // Lida com a resposta
+                    console.log('Status da requisição:', xhr.status);
+                    console.log('Resposta da requisição:', xhr.response);
+
+                    // Adicione aqui qualquer manipulação adicional da resposta, se necessário
+                }
+            }
+        };
+
+        // Envia a requisição com os dados do formulário
+        xhr.send(formData);
+        
+        // Limpa os valores do formulário após o envio bem-sucedido
+        document.getElementById('detalhesEmpresaForm').reset();
+        
     });
-} else {
-    // Se já estiver inicializado, apenas atualize a referência
-    dataTable = $('#datatable').DataTable();
-}
+    
+    // Variável para armazenar a referência ao DataTable
+    var dataTable;
 
-// Salve a referência ao DataTable para uso posterior
-$('#tabela-empresas').data('datatable', dataTable);
-
-// Verifique se o DataTable foi inicializado
-if (dataTable) {
-    // Limpe os dados existentes no DataTable
-    dataTable.clear();
-
-    // Adicione os novos dados ao DataTable
-    <?php
-    if (isset($empresas)) {
-        foreach ($empresas as $empresa) {
-            echo "dataTable.row.add([
-                '{$empresa['id']}',
-                '{$empresa['name']}',
-                '{$empresa['cnpj']}',
-                '{$empresa['cep']}',
-                '{$empresa['address']}'
-            ]);";
-        }
+    // Inicialize o DataTable se ainda não foi inicializado
+    if (!$.fn.DataTable.isDataTable('#datatable')) {
+        dataTable = $('#datatable').DataTable({
+            "paging": true,
+            "info": true
+            // Adicione outras opções conforme necessário
+        });
+    } else {
+        // Se já estiver inicializado, apenas atualize a referência
+        dataTable = $('#datatable').DataTable();
     }
-    ?>
 
-    // Atualize o DataTable
-    dataTable.draw();
-} else {
-    console.error('Erro: DataTable não inicializado.');
-}
+    // Salve a referência ao DataTable para uso posterior
+    $('#tabela-empresas').data('datatable', dataTable);
+
+    // Verifique se o DataTable foi inicializado
+    if (dataTable) {
+        // Limpe os dados existentes no DataTable
+        dataTable.clear();
+
+        // Adicione os novos dados ao DataTable
+        <?php
+        if (isset($empresas)) {
+            foreach ($empresas as $empresa) {
+                echo "dataTable.row.add([
+                    '{$empresa['id']}',
+                    '{$empresa['name']}',
+                    '{$empresa['cnpj']}',
+                    '{$empresa['cep']}',
+                    '{$empresa['address']}'
+                ]);";
+            }
+        }
+        ?>
+
+        // Atualize o DataTable
+        dataTable.draw();
+    } else {
+        console.error('Erro: DataTable não inicializado.');
+    }    
+});
 </script>
 
 </body>
