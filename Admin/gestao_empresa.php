@@ -54,8 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Liberar o resultado da consulta
         mysqli_free_result($result);
 
-        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-        var_dump($empresas);
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo "Erro na consulta: " . mysqli_error($link);
@@ -68,10 +66,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $empresas = $_SESSION['empresas'];
 // Verifique se $empresas está definido antes de usar json_encode
 if (isset($empresas)) {
-    echo json_encode($empresas);
+    $empresas = json_encode($empresas);
 } else {
     // Lidere com a situação em que $empresas não está definido
-    echo json_encode([]);
+    $empresas = json_encode([]);
 }
 
 ?>
@@ -338,43 +336,48 @@ $(document).ready(function() {
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('detalhesEmpresaForm').addEventListener('submit', function (e) {
-        e.preventDefault();
 
-        // Recupera os dados do formulário
-        var formData = new FormData(this);
+atualizarTabela(<?php echo $empresas ?>);
 
-        // Cria uma instância do objeto XMLHttpRequest
-        var xhr = new XMLHttpRequest();
+document.getElementById('detalhesEmpresaForm').addEventListener('submit', function (e) {
+    e.preventDefault();
 
-        // Configura a requisição
-        xhr.open('POST', window.location.href, true);
+    // Recupera os dados do formulário
+    var formData = new FormData(this);
 
-        // Define o tipo de dados esperado na resposta como JSON
-        xhr.responseType = 'json';
+    // Cria uma instância do objeto XMLHttpRequest
+    var xhr = new XMLHttpRequest();
 
-        // Manipula o estado da requisição
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    // Lida com a resposta
-                    console.log('Status da requisição:', xhr.status);
-                    console.log('Resposta da requisição:', xhr.response);
+    // Configura a requisição
+    xhr.open('POST', window.location.href, true);
 
-                    // Adicione aqui qualquer manipulação adicional da resposta, se necessário
-                }
+    // Define o tipo de dados esperado na resposta como JSON
+    xhr.responseType = 'json';
+
+    // Manipula o estado da requisição
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                // Lida com a resposta
+                console.log('Status da requisição:', xhr.status);
+                console.log('Resposta da requisição:', xhr.response);
+
+                // Adicione aqui qualquer manipulação adicional da resposta, se necessário
             }
-        };
+        }
+    };
 
-        // Envia a requisição com os dados do formulário
-        xhr.send(formData);
-        
-        // Limpa os valores do formulário após o envio bem-sucedido
-        document.getElementById('detalhesEmpresaForm').reset();
-        
-    });
+    // Envia a requisição com os dados do formulário
+    xhr.send(formData);
+    location.reload();
     
+    
+    // Limpa os valores do formulário após o envio bem-sucedido
+    document.getElementById('detalhesEmpresaForm').reset();
+    
+});
+
+function atualizarTabela(empresas) {
     // Variável para armazenar a referência ao DataTable
     var dataTable;
 
@@ -417,8 +420,8 @@ document.addEventListener('DOMContentLoaded', function () {
         dataTable.draw();
     } else {
         console.error('Erro: DataTable não inicializado.');
-    }    
-});
+    };
+};
 </script>
 
 </body>
