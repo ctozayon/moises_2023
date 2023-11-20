@@ -1,7 +1,15 @@
 <?php include 'layouts/session.php'; 
 session_start();
 $empresas = $_SESSION['empresas'];
-echo json_encode($empresas)?>
+
+// Verifique se $empresas está definido antes de usar json_encode
+if (isset($empresas)) {
+    echo json_encode($empresas);
+} else {
+    // Lidere com a situação em que $empresas não está definido
+    echo json_encode([]);
+}
+?>
 
 <?php include 'layouts/head-main.php'; ?>
 
@@ -10,6 +18,13 @@ echo json_encode($empresas)?>
     <title>Gestão de Empresas</title>
     <?php include 'layouts/head.php'; ?>
     <?php include 'layouts/head-style.php'; ?>
+
+    <!-- DataTables -->
+    <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Responsive datatable examples -->
+    <link href="assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -57,7 +72,7 @@ echo json_encode($empresas)?>
 
                             <div class="card-body">                            
                                 <div class="table-responsive">
-                                    <table class="table mb-0">
+                                    <table  id="datatable" class="table mb-0">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -164,9 +179,28 @@ echo json_encode($empresas)?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-<!-- Adicionando Javascript -->
-<script>
 
+        <!-- Adicionando Javascript -->
+    <!-- Required datatable js -->
+<script src="assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- Responsive examples -->
+<script src="assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Buttons examples -->
+<script src="assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js"></script>
+<script src="assets/libs/jszip/jszip.min.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="assets/libs/datatables.net-buttons/js/buttons.colVis.min.js"></script>
+
+<!-- Datatable init js -->
+<script src="assets/js/pages/datatables.init.js"></script>
+
+<script>
 $(document).ready(function() {
 
     function limpa_formulário_cep() {
@@ -243,50 +277,46 @@ $(document).ready(function() {
 // Variável para armazenar a referência ao DataTable
 var dataTable;
 
-$(document).ready(function() {
-    // Inicialize o DataTable se ainda não foi inicializado
-    if (!$.fn.DataTable.isDataTable('#datatable')) {
-        dataTable = $('#datatable').DataTable({
-            "paging": true,
-            "info": true
-            // Adicione outras opções conforme necessário
-        });
-    } else {
-        // Se já estiver inicializado, apenas atualize a referência
-        dataTable = $('#datatable').DataTable();
-    }
-
-    // Salve a referência ao DataTable para uso posterior
-    $('#tabela-empresas').data('datatable', dataTable);
-});
-
-function atualizarListaEmpresas(empresas) {
-    // Obtenha a referência ao DataTable salva
-    var dataTable = $('#tabela-empresas').data('datatable');
-
-    // Verifique se o DataTable foi inicializado
-    if (dataTable) {
-        // Limpe os dados existentes no DataTable
-        dataTable.clear();
-
-        // Adicione os novos dados ao DataTable
-        empresas.forEach(empresa => {
-            dataTable.row.add([
-                empresa.name,
-                empresa.cnpj,
-                empresa.cep,
-                empresa.address
-            ]);
-        });
-
-        // Atualize o DataTable
-        dataTable.draw();
-    } else {
-        console.error('Erro: DataTable não inicializado.');
-    }
+// Inicialize o DataTable se ainda não foi inicializado
+if (!$.fn.DataTable.isDataTable('#datatable')) {
+    dataTable = $('#datatable').DataTable({
+        "paging": true,
+        "info": true
+        // Adicione outras opções conforme necessário
+    });
+} else {
+    // Se já estiver inicializado, apenas atualize a referência
+    dataTable = $('#datatable').DataTable();
 }
 
+// Salve a referência ao DataTable para uso posterior
+$('#tabela-empresas').data('datatable', dataTable);
 
+// Verifique se o DataTable foi inicializado
+if (dataTable) {
+    // Limpe os dados existentes no DataTable
+    dataTable.clear();
+
+    // Adicione os novos dados ao DataTable
+    <?php
+    if (isset($empresas)) {
+        foreach ($empresas as $empresa) {
+            echo "dataTable.row.add([
+                '{$empresa['id']}',
+                '{$empresa['name']}',
+                '{$empresa['cnpj']}',
+                '{$empresa['cep']}',
+                '{$empresa['address']}'
+            ]);";
+        }
+    }
+    ?>
+
+    // Atualize o DataTable
+    dataTable.draw();
+} else {
+    console.error('Erro: DataTable não inicializado.');
+}
 </script>
 
 </body>
