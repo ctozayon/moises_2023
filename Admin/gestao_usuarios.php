@@ -273,54 +273,6 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
 
 <script src="assets/js/app.js"></script>
 
-<!-- <script> -->
-// function atualizarTabela(usuarios) {
-//     // Variável para armazenar a referência ao DataTable
-//     var dataTable;
-
-//     // Inicialize o DataTable se ainda não foi inicializado
-//     if (!$.fn.DataTable.isDataTable('#datatable')) {
-//         dataTable = $('#datatable').DataTable({
-//             "paging": true,
-//             "info": true
-//             // Adicione outras opções conforme necessário
-//         });
-//     } else {
-//         // Se já estiver inicializado, apenas atualize a referência
-//         dataTable = $('#datatable').DataTable();
-//     }
-
-//     // Salve a referência ao DataTable para uso posterior
-//     $('#tabela-usuarios').data('datatable', dataTable);
-
-//     // Verifique se o DataTable foi inicializado
-//     if (dataTable) {
-//         // Limpe os dados existentes no DataTable
-//         dataTable.clear();
-
-//         // Adicione os novos dados ao DataTable
-//         <?php
-//         if (isset($usuarios)) {
-//             foreach ($usuarios as $usuario) {
-//                 echo "dataTable.row.add([
-//                     '{$usuario['username']}',
-//                     '{$usuario['fistname']}',
-//                     '{$usuario['lastname']}',
-//                     '{$usuario['cpf']}',
-//                     '{$usuario['phone']}'
-//                 ]);";
-//             }
-//         }
-//         ?>
-        
-//         // Atualize o DataTable
-//         dataTable.draw();
-//     } else {
-//         console.error('Erro: DataTable não inicializado.');
-//     };
-// };
-// </script>
-
 </body>
 
 </html>
