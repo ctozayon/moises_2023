@@ -1,4 +1,49 @@
-<?php include 'layouts/session.php'; ?>
+<?php
+include 'layouts/session.php';
+// Include config file
+include 'layouts/config.php';
+session_start();
+if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
+    $sql = "SELECT U.id, U.username, U.useremail, U.firstname, U.lastname, U.cpf, U.phone, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
+    FROM users U
+    LEFT JOIN user_permissions UP ON U.id = UP.user_id
+    LEFT JOIN permissions P ON UP.permission_id = P.id";
+
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável empresa como um array para armazenar os resultados
+        $usuarios = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $usuarios[] = $row;
+        }
+
+        if ($usuarios){
+            $_SESSION["usuarios"] = $usuarios;
+        }
+        else{
+            $_SESSION["usuarios"] = "";
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Exibir o conteúdo da variável empresa (pode ser removido em produção)
+        var_dump($empresas);
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo "Erro na consulta: " . mysqli_error($link);
+    }
+
+    // Close connection
+    mysqli_close($link);
+}
+?>
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -64,12 +109,12 @@
                             <div class="card-body">
                             
                                         <div class="table-responsive">
-                                            <table class="table align-middle datatable dt-responsive table-check nowrap" style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
+                                            <table  id="tabela-usuarios" class="table align-middle datatable dt-responsive table-check nowrap" style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
                                                 <thead>
                                                     <tr class="bg-transparent">
-                                                        <th style="width: 30px;">
+                                                        <!-- <th style="width: 30px;">
                                                         <i class="mdi mdi-checkbox-outline text-primary me-1"></i>
-                                                        </th>
+                                                        </th> -->
                                                         <th style="width: 120px;">ID</th>
                                                         <th>Email</th>
                                                         <th>Usuário</th>
@@ -80,91 +125,27 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-        
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check font-size-16">
-                                                                <input type="checkbox" class="form-check-input">
-                                                                <label class="form-check-label"></label>
-                                                            </div>
-                                                        </td>
-                                                        
-                                                        <td><a href="javascript: void(0);" class="text-body fw-medium">#MN0215</a> </td>
-                                                        <td>
-                                                            teste1@teste.com
-                                                        </td>
-                                                        <td>teste_limitado</td>
-                                                        
-                                                        <td>
-                                                            Teste
-                                                        </td>
-                                                        <td>
-                                                            Limitado
-                                                        </td>
-                                                        <td>
-                                                            123456789-12
-                                                        </td>
-                                                        
-                                                        <td>
-                                                            (11)99999-9999
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check font-size-16">
-                                                                <input type="checkbox" class="form-check-input">
-                                                                <label class="form-check-label"></label>
-                                                            </div>
-                                                        </td>
-                                                        
-                                                        <td><a href="javascript: void(0);" class="text-body fw-medium">#MN0216</a> </td>
-                                                        <td>
-                                                            teste2@teste.com
-                                                        </td>
-                                                        <td>teste_geral</td>
-                                                        
-                                                        <td>
-                                                            Teste
-                                                        </td>
-                                                        <td>
-                                                            Geral
-                                                        </td>
-                                                        <td>
-                                                            987654321-98
-                                                        </td>
-                                                        
-                                                        <td>
-                                                            (41)98888-8888
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>
-                                                            <div class="form-check font-size-16">
-                                                                <input type="checkbox" class="form-check-input">
-                                                                <label class="form-check-label"></label>
-                                                            </div>
-                                                        </td>
-                                                        
-                                                        <td><a href="javascript: void(0);" class="text-body fw-medium">#MN0212</a> </td>
-                                                        <td>
-                                                            teste3@teste.com
-                                                        </td>
-                                                        <td>teste_admin</td>
-                                                        
-                                                        <td>
-                                                            Teste
-                                                        </td>
-                                                        <td>
-                                                            Admin
-                                                        </td>
-                                                        <td>
-                                                            975318642-36
-                                                        </td>
-                                                        
-                                                        <td>
-                                                            (11)97777-7777
-                                                        </td>
-                                                    </tr>                                                    
+                                                    <?php
+                                                    foreach ($usuarios as $usuario){?>
+                                                        <tr>
+                                                            <!-- <td>
+                                                                <div class="form-check font-size-16">
+                                                                    <input type="checkbox" class="form-check-input">
+                                                                    <label class="form-check-label"></label>
+                                                                </div>
+                                                            </td> -->
+                                                            
+                                                            <td><a href="javascript: void(0);" class="text-body fw-medium"><?php echo $usuario['id'] ?></a> </td>
+                                                            <td> <?php echo $usuario['useremail'] ?> </td>
+                                                            <td> <?php echo $usuario['username'] ?> </td>
+                                                            <td> <?php echo $usuario['firstname'] ?> </td>
+                                                            <td> <?php echo $usuario['lastname'] ?> </td>
+                                                            <td> <?php echo $usuario['cpf'] ?> </td>
+                                                            <td> <?php echo $usuario['phone'] ?> </td>
+                                                        </tr>
+                                                    <?php
+                                                    }
+                                                    ?>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -291,6 +272,54 @@
 <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
 <script src="assets/js/app.js"></script>
+
+<!-- <script> -->
+// function atualizarTabela(usuarios) {
+//     // Variável para armazenar a referência ao DataTable
+//     var dataTable;
+
+//     // Inicialize o DataTable se ainda não foi inicializado
+//     if (!$.fn.DataTable.isDataTable('#datatable')) {
+//         dataTable = $('#datatable').DataTable({
+//             "paging": true,
+//             "info": true
+//             // Adicione outras opções conforme necessário
+//         });
+//     } else {
+//         // Se já estiver inicializado, apenas atualize a referência
+//         dataTable = $('#datatable').DataTable();
+//     }
+
+//     // Salve a referência ao DataTable para uso posterior
+//     $('#tabela-usuarios').data('datatable', dataTable);
+
+//     // Verifique se o DataTable foi inicializado
+//     if (dataTable) {
+//         // Limpe os dados existentes no DataTable
+//         dataTable.clear();
+
+//         // Adicione os novos dados ao DataTable
+//         <?php
+//         if (isset($usuarios)) {
+//             foreach ($usuarios as $usuario) {
+//                 echo "dataTable.row.add([
+//                     '{$usuario['username']}',
+//                     '{$usuario['fistname']}',
+//                     '{$usuario['lastname']}',
+//                     '{$usuario['cpf']}',
+//                     '{$usuario['phone']}'
+//                 ]);";
+//             }
+//         }
+//         ?>
+        
+//         // Atualize o DataTable
+//         dataTable.draw();
+//     } else {
+//         console.error('Erro: DataTable não inicializado.');
+//     };
+// };
+// </script>
 
 </body>
 
