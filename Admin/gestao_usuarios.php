@@ -40,9 +40,52 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
         echo "Erro na consulta: " . mysqli_error($link);
     }
 
-    // Close connection
-    mysqli_close($link);
 }
+// Seção para carregar empresas_usuarios do Usuario selecionado
+if (isset($_POST['selectedUsuario'])) {
+    $selectedUsuario = $_POST['selectedUsuario'];
+    $selectedPermission = $_POST['selectedPermission'];
+
+    if ($selectedPermission == 1 || $selectedPermission == 2) {
+        $sql = "SELECT * FROM company";
+    } else {
+        $sql = "SELECT C.id, C.name, C.cnpj, C.cep, C.address FROM company C
+        left join company_user CU on C.id = CU.id_company
+        WHERE CU.id_user = " . $selectedUsuario;
+    }
+    
+    // Executar a consulta
+    $result = mysqli_query($link, $sql);
+
+    // Verificar se a consulta foi bem-sucedida
+    if ($result) {
+        // Inicializar a variável $empresas_usuarios como um array para armazenar os resultados
+        $empresas_usuarios = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result)) {
+            // Adicionar cada linha ao array
+            $empresas_usuarios[] = $row;
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result);
+
+        // Enviar a resposta como JSON
+        header('Content-Type: application/json');
+
+        // Imprime o JSON
+        echo json_encode($empresas_usuarios);
+
+        exit(); // Certifique-se de sair após enviar a resposta
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+    }
+}
+
+// Close connection
+mysqli_close($link);
 ?>
 <?php include 'layouts/head-main.php'; ?>
 
@@ -135,7 +178,7 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
                                                                 </div>
                                                             </td> -->
                                                             
-                                                            <td><a href="javascript: void(0);" class="text-body fw-medium"><?php echo $usuario['id'] ?></a> </td>
+                                                            <td><a href="javascript: void(0);" class="text-body fw-medium" onclick="selecionarUsuario(<?php echo $usuario['id'] ?> , <?php echo $usuario['permission_id']?>)"><?php echo $usuario['id'] ?></a> </td>
                                                             <td> <?php echo $usuario['useremail'] ?> </td>
                                                             <td> <?php echo $usuario['username'] ?> </td>
                                                             <td> <?php echo $usuario['firstname'] ?> </td>
@@ -272,6 +315,48 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
 <script src="assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
 
 <script src="assets/js/app.js"></script>
+
+<script>
+function selecionarUsuario(Usuario, Permission) {
+
+    // Envia o formulário via AJAX
+    var formData = new FormData();
+    formData.append('selectedUsuario', Usuario);
+    formData.append('selectedPermission', Permission);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', window.location.href, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                try {
+                    var responseText = xhr.responseText.trim();
+                    var cleanedResponse = responseText.replace(/\n/g, '').trim();
+                    // console.log(cleanedResponse);
+                    // if (cleanedResponse !== '') {
+                    //     // Tentar fazer o parse novamente
+                    //     try {
+                    //         var arquivos = JSON.parse(cleanedResponse);
+                    //         // console.log("Array parseado:", arquivos);
+                    //     } catch (error) {
+                    //         console.error("Erro ao fazer o parse JSON:", error);
+                    //     }
+                    //     atualizarListaArquivos(arquivos);
+                    // } else {
+                    //     console.error('Resposta JSON vazia ou inválida.');
+                    // }
+                } catch (error) {
+                    console.error('Erro ao analisar JSON:', error);
+                }
+            } else {
+                console.error('Erro na solicitação:', xhr.status);
+            }
+        }
+    };
+
+    xhr.send(formData);
+}
+</script>
 
 </body>
 
