@@ -77,11 +77,46 @@ if (isset($_POST['selectedUsuario'])) {
         // Imprime o JSON
         echo json_encode($empresas_usuarios);
 
+    } else {
+        // Se a consulta falhou, exibir uma mensagem de erro
+        echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+    }
+
+    $sql1 = "SELECT U.id, U.username, U.useremail, U.firstname, U.lastname, U.cpf, U.phone, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
+    FROM users U
+    LEFT JOIN user_permissions UP ON U.id = UP.user_id
+    LEFT JOIN permissions P ON UP.permission_id = P.id
+    WHERE U.id = $selectedUsuario";
+
+    // Executar a consulta
+    $result1 = mysqli_query($link, $sql1);
+
+    // Verificar se a consulta foi bem-sucedida
+    if ($result1) {
+        // Inicializar a variável $empresas_usuarios como um array para armazenar os resultados
+        $usuario_selecionado = array();
+
+        // Obter os resultados da consulta
+        while ($row = mysqli_fetch_assoc($result1)) {
+            // Adicionar cada linha ao array
+            $usuario_selecionado[] = $row;
+        }
+
+        // Liberar o resultado da consulta
+        mysqli_free_result($result1);
+
+        // // Enviar a resposta como JSON
+        // header('Content-Type: application/json');
+
+        // Imprime o JSON
+        echo json_encode($usuario_selecionado);
+
         exit(); // Certifique-se de sair após enviar a resposta
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
     }
+
 }
 
 // Close connection
@@ -209,7 +244,7 @@ mysqli_close($link);
                                     <div class="flex-grow-1">
                                         <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">Usuário Teste</a></h5>
                                         <!-- <p class="text-muted mb-0">Available</p> -->
-                                        <div class="d-flex flex-wrap gap-2 mt-1">
+                                        <div class="d-flex flex-wrap gap-2 mt-1" id="permissao">
                                             <span class="badge rounded-pill bg-primary">Limitado</span>
                                             <span class="badge rounded-pill bg-success">Geral</span>
                                             <span class="badge rounded-pill bg-info">Admin</span>
@@ -332,19 +367,6 @@ function selecionarUsuario(Usuario, Permission) {
                 try {
                     var responseText = xhr.responseText.trim();
                     var cleanedResponse = responseText.replace(/\n/g, '').trim();
-                    // console.log(cleanedResponse);
-                    // if (cleanedResponse !== '') {
-                    //     // Tentar fazer o parse novamente
-                    //     try {
-                    //         var arquivos = JSON.parse(cleanedResponse);
-                    //         // console.log("Array parseado:", arquivos);
-                    //     } catch (error) {
-                    //         console.error("Erro ao fazer o parse JSON:", error);
-                    //     }
-                    //     atualizarListaArquivos(arquivos);
-                    // } else {
-                    //     console.error('Resposta JSON vazia ou inválida.');
-                    // }
                 } catch (error) {
                     console.error('Erro ao analisar JSON:', error);
                 }
@@ -355,6 +377,17 @@ function selecionarUsuario(Usuario, Permission) {
     };
 
     xhr.send(formData);
+    // atualizarUsusarioSelecionado(<?php echo $usuario_selecionado ?>, <?php echo $empresas_usuarios ?>);
+}
+// function atualizarUsusarioSelecionado(usuario_selecionado, empresas_usuarios) {
+//     const permissoes = document.getElementById('permissao');
+//         permissoes.innerHTML = '';
+//         // Adiciona uma tag <a> para cada projeto na resposta
+//         const permissao_usuario = document.createElement('span');
+//         permissao_usuario.className = 'badge rounded-pill bg-primary';
+//         permissao_usuario.textContent = <?php echo $usuario_selecionado['description'] ?>;
+
+//         permissoes.appendChild(permissao_usuario);         
 }
 </script>
 
