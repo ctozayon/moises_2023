@@ -42,6 +42,11 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
     }
 
 }
+
+if (isset($_POST['selectedUsuario'])) {
+    $_SESSION['selectedUsuario'] = $_POST['selectedUsuario'];
+}
+
 // Seção para carregar empresas_usuarios do Usuario selecionado
 if (isset($_POST['selectedUsuario'])) {
     $selectedUsuario = $_POST['selectedUsuario'];
@@ -161,6 +166,31 @@ if ($result3) {
 } else {
     // Se a consulta falhou, exibir uma mensagem de erro
     echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+}
+
+// Verifica se o formulário foi enviado usando o método POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verifica se os campos 'selectedEmpresaId' e 'usuarioSelecionadoId' estão presentes no POST
+    if (isset($_POST['selectedEmpresaId']) && isset($_SESSION['selectedUsuario'])) {
+        // Obtém os valores do POST
+        $selectedEmpresaId = $_POST['selectedEmpresaId'];
+        $usuarioSelecionadoId = $_SESSION['selectedUsuario'];
+
+        // Aqui você pode realizar operações no banco de dados para inserir os valores na tabela company_user
+        // Substitua 'sua_tabela' pelos nomes reais das tabelas envolvidas
+        $sql = "INSERT INTO company_user (id_company, id_user) VALUES ('$selectedEmpresaId', '$usuarioSelecionadoId')";
+
+        // Executa a consulta
+        if (mysqli_query($link, $sql)) {
+            exit();
+        } else {
+            // Se houver um erro na consulta, exibe uma mensagem de erro
+            echo 'Erro na inserção na tabela company_user: ' . mysqli_error($link);
+        }
+    } else {
+        // Se algum dos campos não estiver presente, trata como um erro
+        echo 'Erro: Os campos não estão presentes';
+    }
 }
 
 // Close connection
@@ -309,18 +339,16 @@ mysqli_close($link);
                                 <!-- Dados do usuário selecionado -->
                             </div><!-- end card-body -->
                             <div id="editarUsuario" class="card-body">
+                            <form id="selecaoForm" method="post">
                                 <div class="col-md-6">
-                                    <label for="empresas_geral">Selecione a empresa pra vincular:</label>
+                                    <label for="empresas_geral">Selecione a empresa para vincular:</label>
                                     <select class="form-select" id="empresas_geral" name="empresas_geral">
                                         <?php
                                         // Verifica se uma empresa foi selecionada
                                         if (isset($empresas_geral)) {
-                                            // Obtém os empresas_geral correspondentes à empresa selecionada
-                                            // $empresas_geral = $empresas_empresas_geral[$_POST['selectedEmpresa']];
-
                                             // Exibe a lista de empresas_geral
                                             foreach ($empresas_geral as $empresa) {
-                                                echo '<option value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
+                                                echo '<option onclick="enviarPostEmpresa('. $empresa['id']. ')" value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
                                             }
                                         } else {
                                             // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
@@ -329,6 +357,11 @@ mysqli_close($link);
                                         ?>
                                     </select>
                                 </div>
+
+                                <!-- <div class="col-md-6">
+                                    <button type="button" onclick="enviarPostEmpresa()">Vincular Empresa</button>
+                                </div> -->
+                            </form>
                             
                                 <div class="col-md-6">
                                     <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
@@ -528,6 +561,24 @@ function editarUsuario() {
     container.innerHTML = '';
     // Exibe ou oculta a edição do uruário
     editaUsuario.style.visibility = this.value !== '' ? 'visible' : 'hidden';
+}
+
+function enviarPostEmpresa(selectedEmpresaId) {
+    var formData = new FormData();
+    formData.append('selectedEmpresaId', selectedEmpresaId);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', window.location.href, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                location.reload();
+            } else {
+                console.error('Erro na solicitação:', xhr.status);
+            }
+        }
+    };
+    xhr.send(formData);
 }
 </script>
 
