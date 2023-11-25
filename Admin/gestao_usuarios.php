@@ -35,7 +35,7 @@ if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
         mysqli_free_result($result);
 
         // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-        var_dump($empresas);
+        // var_dump($empresas);
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo "Erro na consulta: " . mysqli_error($link);
@@ -104,6 +104,8 @@ if (isset($_POST['selectedUsuario'])) {
             // Adicionar cada linha ao array
             $usuario_selecionado[] = $row;
         }
+
+        // $_POST['selectedPermission'] = $usuario_selecionado[0]['Permissão'];
         
         $usuario_selecionado = array_merge($usuario_selecionado, $empresas_usuarios);
             
@@ -168,34 +170,70 @@ if ($result3) {
     echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
 }
 
-// Verifica se o formulário foi enviado usando o método POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verifica se os campos 'selectedEmpresaId' e 'usuarioSelecionadoId' estão presentes no POST
-    if (isset($_POST['selectedEmpresaId']) && isset($_SESSION['selectedUsuario'])) {
-        // Obtém os valores do POST
-        $selectedEmpresaId = $_POST['selectedEmpresaId'];
+// Verifica se os campos 'selectedEmpresaId' e 'usuarioSelecionadoId' estão presentes no POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedEmpresaId']) && isset($_SESSION['selectedUsuario'])) {
+    // Obtém os valores do POST
+    $selectedEmpresaId = $_POST['selectedEmpresaId'];
+    $usuarioSelecionadoId = $_SESSION['selectedUsuario'];
+
+    // Aqui você pode realizar operações no banco de dados para inserir os valores na tabela company_user
+    // Substitua 'sua_tabela' pelos nomes reais das tabelas envolvidas
+    $sql = "INSERT INTO company_user (id_company, id_user) VALUES ('$selectedEmpresaId', '$usuarioSelecionadoId')";
+
+    // Executa a consulta
+    if (mysqli_query($link, $sql)) {
+        exit();
+    } else {
+        // Se houver um erro na consulta, exibe uma mensagem de erro
+        echo 'Erro na inserção na tabela company_user: ' . mysqli_error($link);
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedPermissionId']) && isset($_SESSION['selectedUsuario'])) {
+    // Obtém os valores do POST
+    $selectedPermissionId = $_POST['selectedPermissionId'];
+
+    // Prepare a select statement
+    $sql = "SELECT * FROM user_permissions WHERE user_id = ?";
+
+    if ($stmt = mysqli_prepare($link, $sql)) {
+        // Bind variables to the prepared statement as parameters
+        mysqli_stmt_bind_param($stmt, "s", $usuarioSelecionadoId);
+
+        // Set parameters
         $usuarioSelecionadoId = $_SESSION['selectedUsuario'];
 
-        // Aqui você pode realizar operações no banco de dados para inserir os valores na tabela company_user
-        // Substitua 'sua_tabela' pelos nomes reais das tabelas envolvidas
-        $sql = "INSERT INTO company_user (id_company, id_user) VALUES ('$selectedEmpresaId', '$usuarioSelecionadoId')";
+        // Attempt to execute the prepared statement
+        if (mysqli_stmt_execute($stmt)) {
+            /* store result */
+            mysqli_stmt_store_result($stmt);
 
-        // Executa a consulta
-        if (mysqli_query($link, $sql)) {
-            exit();
+            if (mysqli_stmt_num_rows($stmt) > 0) {
+                $sql = "UPDATE `minia_php`.`user_permissions` SET `permission_id` = $selectedPermissionId WHERE user_id = $usuarioSelecionadoId";
+            } else {
+                $sql = "INSERT INTO user_permissions (permission_id, user_id) VALUES ('$selectedPermissionId', '$usuarioSelecionadoId')";
+            }
+            // Executa a consulta
+            if (mysqli_query($link, $sql)) {
+                exit();
+            } else {
+                // Se houver um erro na consulta, exibe uma mensagem de erro
+                echo 'Erro na inserção na tabela permission_user: ' . mysqli_error($link);
+            }
         } else {
-            // Se houver um erro na consulta, exibe uma mensagem de erro
-            echo 'Erro na inserção na tabela company_user: ' . mysqli_error($link);
+            echo "Oops! Something went wrong. Please try again later.";
         }
-    } else {
-        // Se algum dos campos não estiver presente, trata como um erro
-        echo 'Erro: Os campos não estão presentes';
+
+        // Close statement
+        mysqli_stmt_close($stmt);
+        
     }
 }
 
 // Close connection
 mysqli_close($link);
 ?>
+
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -243,7 +281,6 @@ mysqli_close($link);
                                     <li class="breadcrumb-item active">Gestão de Usuários</li>
                                 </ol>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -339,41 +376,41 @@ mysqli_close($link);
                                 <!-- Dados do usuário selecionado -->
                             </div><!-- end card-body -->
                             <div id="editarUsuario" class="card-body">
-                            <div class="col-md-6">
-                                <label for="empresas_geral">Selecione a empresa para vincular:</label>
-                                <select class="form-select" id="empresas_geral" name="empresas_geral">
-                                    <?php
-                                    // Verifica se uma empresa foi selecionada
-                                    if (isset($empresas_geral)) {
-                                        // Exibe a lista de empresas_geral
-                                        foreach ($empresas_geral as $empresa) {
-                                            echo '<option onclick="enviarPostEmpresa('. $empresa['id']. ')" value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
+                                <div id="vinculo_empresa" class="col-md-6">
+                                    <label for="empresas_geral">Selecione a empresa para vincular:</label>
+                                    <select class="form-select" id="empresas_geral" name="empresas_geral">
+                                        <?php
+                                        // Verifica se uma empresa foi selecionada
+                                        if (isset($empresas_geral)) {
+                                            // Exibe a lista de empresas_geral
+                                            foreach ($empresas_geral as $empresa) {
+                                                echo '<option onclick="enviarPostEmpresa('. $empresa['id']. ')" value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
+                                            }
+                                        } else {
+                                            // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                            echo '<option value="">Não existem empresas cadastradas ou não foram carregadas</option>';
                                         }
-                                    } else {
-                                        // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
-                                        echo '<option value="">Selecione um usuário primeiro</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
-                                <select class="form-select" id="permissoes_geral" name="permissoes_geral">
-                                    <?php
-                                    // Verifica se uma empresa foi selecionada
-                                    if (isset($permissoes_geral)) {
-                                        // Exibe a lista de permissoes_geral
-                                        foreach ($permissoes_geral as $permissao) {
-                                            echo '<option value="' . $permissao['id'] . '">' . $permissao['description'] . '</option>';
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
+                                    <select class="form-select" id="permissoes_geral" name="permissoes_geral">
+                                        <?php
+                                        // Verifica se uma empresa foi selecionada
+                                        if (isset($permissoes_geral)) {
+                                            // Exibe a lista de permissoes_geral
+                                            foreach ($permissoes_geral as $permissao) {
+                                                echo '<option onclick="enviarPostpermissao('. $permissao['id']. ')" value="' . $permissao['id'] . '">' . ucfirst($permissao['description']) . '</option>';
+                                            }
+                                        } else {
+                                            // Caso nenhuma permissao tenha sido selecionada ou a permissao selecionada não exista nos dados
+                                            echo '<option value="">Não existem permissões cadastradas ou não foram carregadas</option>';
                                         }
-                                    } else {
-                                        // Caso nenhuma permissao tenha sido selecionada ou a permissao selecionada não exista nos dados
-                                        echo '<option value="">Selecione um usuário primeiro</option>';
-                                    }
-                                    ?>
-                                </select>
+                                        ?>
+                                    </select>
+                                </div>
                             </div>
-                            
                         </div><!-- end card -->
                     </div><!-- end col -->
                 </div><!-- end row -->
@@ -480,9 +517,14 @@ function atualizarUsusarioSelecionado(usuario_selecionado) {
     // Adiciona uma tag <span> para cada permissão na resposta
     const permissao_usuario = document.createElement('span');
     permissao_usuario.className = 'badge rounded-pill bg-primary';
-    permissao_usuario.textContent = usuario_selecionado[0].Permissão;
+    permissao_usuario.textContent = usuario_selecionado[0].Permissão.charAt(0).toUpperCase() + usuario_selecionado[0].Permissão.slice(1);
     nomeUsuario.appendChild(permissao_usuario);
-
+    
+    const vinculo_empresa = document.getElementById('vinculo_empresa');
+    if (usuario_selecionado[0].Permissão != 'limitado') {
+        vinculo_empresa.style.visibility = 'hidden';
+    }
+    
     console.log('Função atualizarUsusarioSelecionado chamada!');
     console.log('Usuário Selecionado:', usuario_selecionado);
 
@@ -573,6 +615,25 @@ function enviarPostEmpresa(selectedEmpresaId) {
     };
     xhr.send(formData);
 }
+
+function enviarPostpermissao(selectedPermissionId) {
+    var formData = new FormData();
+    formData.append('selectedPermissionId', selectedPermissionId);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', window.location.href, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                location.reload();
+            } else {
+                console.error('Erro na solicitação:', xhr.status);
+            }
+        }
+    };
+    xhr.send(formData);
+}
+
 </script>
 
 </body>
