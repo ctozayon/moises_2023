@@ -1,5 +1,5 @@
 <?php
-include 'layouts/session.php';
+// include 'layouts/session.php';
 // Include config file
 include 'layouts/config.php';
 session_start();
@@ -75,14 +75,14 @@ if (isset($_POST['selectedUsuario'])) {
         header('Content-Type: application/json');
 
         // Imprime o JSON
-        echo json_encode($empresas_usuarios);
+        // echo json_encode($empresas_usuarios);
 
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
     }
 
-    $sql1 = "SELECT U.id, U.username, U.useremail, U.firstname, U.lastname, U.cpf, U.phone, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
+    $sql1 = "SELECT U.id, U.username as 'Usuário', U.useremail as 'E-mail', U.firstname as 'Nome', U.lastname as 'Sobrenome', U.cpf, U.phone as 'Telefone', COALESCE(P.description, 'limitado') as 'Permissão'
     FROM users U
     LEFT JOIN user_permissions UP ON U.id = UP.user_id
     LEFT JOIN permissions P ON UP.permission_id = P.id
@@ -101,7 +101,9 @@ if (isset($_POST['selectedUsuario'])) {
             // Adicionar cada linha ao array
             $usuario_selecionado[] = $row;
         }
-
+        
+        $usuario_selecionado = array_merge($usuario_selecionado, $empresas_usuarios);
+            
         // Liberar o resultado da consulta
         mysqli_free_result($result1);
 
@@ -110,13 +112,11 @@ if (isset($_POST['selectedUsuario'])) {
 
         // Imprime o JSON
         echo json_encode($usuario_selecionado);
-
         exit(); // Certifique-se de sair após enviar a resposta
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
     }
-
 }
 
 // Close connection
@@ -241,13 +241,13 @@ mysqli_close($link);
                                         <img src="assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle" alt="">
                                     </div>
                                     
-                                    <div class="flex-grow-1">
-                                        <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">Usuário Teste</a></h5>
+                                    <div class="flex-grow-1" id="nomeUsuario">
+                                        <!-- <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">Usuário Teste</a></h5> -->
                                         <!-- <p class="text-muted mb-0">Available</p> -->
                                         <div class="d-flex flex-wrap gap-2 mt-1" id="permissao">
-                                            <span class="badge rounded-pill bg-primary">Limitado</span>
+                                            <!-- <span class="badge rounded-pill bg-primary">Limitado</span>
                                             <span class="badge rounded-pill bg-success">Geral</span>
-                                            <span class="badge rounded-pill bg-info">Admin</span>
+                                            <span class="badge rounded-pill bg-info">Admin</span> -->
                                         </div>
                                     </div>
 
@@ -265,9 +265,9 @@ mysqli_close($link);
                                 </div>
                             </div><!-- end card header-->
 
-                            <div class="card-body">
+                            <div id="dadosUsuario" class="card-body">
 
-                                <div class="row mb-4">
+                                <!-- <div class="row mb-4">
                                     <label for="horizontal-primeiro-nome" class="col-sm-3 col-form-label">Primeiro Nome</label>
                                     <div class="col-sm-9">
                                         <p>Teste</p>
@@ -311,7 +311,7 @@ mysqli_close($link);
                                             <span class="badge rounded-pill bg-danger">Faza</span>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div><!-- end card-body -->
                         </div><!-- end card -->
                     </div><!-- end col -->
@@ -353,8 +353,6 @@ mysqli_close($link);
 
 <script>
 function selecionarUsuario(Usuario, Permission) {
-
-    // Envia o formulário via AJAX
     var formData = new FormData();
     formData.append('selectedUsuario', Usuario);
     formData.append('selectedPermission', Permission);
@@ -366,7 +364,24 @@ function selecionarUsuario(Usuario, Permission) {
             if (xhr.status == 200) {
                 try {
                     var responseText = xhr.responseText.trim();
-                    var cleanedResponse = responseText.replace(/\n/g, '').trim();
+                    // Suponha que responseText contenha a string JSON
+                    var cleanedResponseTemp = responseText.replace(/\n/g, '').trim();
+                    var cleanedResponse = cleanedResponseTemp.replace(/NULL/g, '').trim();
+                    // console.log(cleanedResponse);
+                    if (cleanedResponse !== '') {
+                        // Tentar fazer o parse novamente
+                        try {
+                            console.log("Resposta JSON:", cleanedResponse);
+                            var usuario_selecionado = JSON.parse(cleanedResponse);
+                            // usuario_selecionado = usuario_selecionado[0];
+                            console.log(usuario_selecionado);
+                        } catch (error) {
+                            console.error("Erro ao fazer o parse JSON:", error);
+                        }
+                        atualizarUsusarioSelecionado(usuario_selecionado);
+                    } else {
+                        console.error('Resposta JSON vazia ou inválida.');
+                    }
                 } catch (error) {
                     console.error('Erro ao analisar JSON:', error);
                 }
@@ -375,19 +390,56 @@ function selecionarUsuario(Usuario, Permission) {
             }
         }
     };
-
     xhr.send(formData);
-    // atualizarUsusarioSelecionado(<?php echo $usuario_selecionado ?>, <?php echo $empresas_usuarios ?>);
 }
-// function atualizarUsusarioSelecionado(usuario_selecionado, empresas_usuarios) {
-//     const permissoes = document.getElementById('permissao');
-//         permissoes.innerHTML = '';
-//         // Adiciona uma tag <a> para cada projeto na resposta
-//         const permissao_usuario = document.createElement('span');
-//         permissao_usuario.className = 'badge rounded-pill bg-primary';
-//         permissao_usuario.textContent = <?php echo $usuario_selecionado['description'] ?>;
 
-//         permissoes.appendChild(permissao_usuario);         
+function atualizarUsusarioSelecionado(usuario_selecionado) {
+    const nomeUsuario = document.getElementById('nomeUsuario');
+    nomeUsuario.innerHTML = '';
+
+    const nome = document.createElement('h5');
+    nome.className = 'font-size-16 mb-1';
+    nome.innerHTML = usuario_selecionado[0].Nome + ' ' + usuario_selecionado[0].Sobrenome;
+    nomeUsuario.appendChild(nome);
+
+    // Adiciona uma tag <span> para cada permissão na resposta
+    const permissao_usuario = document.createElement('span');
+    permissao_usuario.className = 'badge rounded-pill bg-primary';
+    permissao_usuario.textContent = usuario_selecionado[0].Permissão;
+    nomeUsuario.appendChild(permissao_usuario);
+
+    console.log('Função atualizarUsusarioSelecionado chamada!');
+    console.log('Usuário Selecionado:', usuario_selecionado);
+
+    // Supondo que usuario_selecionado[0] seja um objeto
+    var usuarioSelecionado = usuario_selecionado[0];
+
+    // Seleciona o elemento onde você deseja adicionar as tags
+    var container = document.getElementById('dadosUsuario'); // Substitua 'seuContainer' pelo ID real do seu contêiner
+    // Limpa o conteúdo existente antes de adicionar novos campos
+    container.innerHTML = '';
+    // Itera sobre as propriedades do objeto usuarioSelecionado
+    for (var propriedade in usuarioSelecionado) {
+        // Cria os elementos HTML
+        var divRow = document.createElement('div');
+        divRow.className = 'row mb-4';
+
+        var label = document.createElement('label');
+        label.className = 'col-sm-3 col-form-label';
+        label.textContent = propriedade.charAt(0).toUpperCase() + propriedade.slice(1); // Capitaliza a primeira letra
+
+        var divCol = document.createElement('div');
+        divCol.className = 'col-sm-9';
+
+        var p = document.createElement('p');
+        p.textContent = usuarioSelecionado[propriedade];
+
+        // Adiciona os elementos ao DOM
+        divCol.appendChild(p);
+        divRow.appendChild(label);
+        divRow.appendChild(divCol);
+        container.appendChild(divRow);
+    }
 }
 </script>
 
