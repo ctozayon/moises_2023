@@ -3,6 +3,7 @@
 // Include config file
 include 'layouts/config.php';
 session_start();
+
 if (!isset($usuarios) ||$_SERVER['REQUEST_METHOD'] === 'POST'){
     $sql = "SELECT U.id, U.username, U.useremail, U.firstname, U.lastname, U.cpf, U.phone, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
     FROM users U
@@ -74,9 +75,6 @@ if (isset($_POST['selectedUsuario'])) {
         // Enviar a resposta como JSON
         header('Content-Type: application/json');
 
-        // Imprime o JSON
-        // echo json_encode($empresas_usuarios);
-
     } else {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
@@ -117,6 +115,52 @@ if (isset($_POST['selectedUsuario'])) {
         // Se a consulta falhou, exibir uma mensagem de erro
         echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
     }
+}
+
+$sql2 = "SELECT * FROM company";
+
+// Executar a consulta
+$result2 = mysqli_query($link, $sql2);
+
+// Verificar se a consulta foi bem-sucedida
+if ($result2) {
+    // Inicializar a variável $empresas_geral como um array para armazenar os resultados
+    $empresas_geral = array();
+
+    // Obter os resultados da consulta
+    while ($row = mysqli_fetch_assoc($result2)) {
+        // Adicionar cada linha ao array
+        $empresas_geral[] = $row;
+    }
+
+    // Liberar o resultado da consulta
+    mysqli_free_result($result2);
+} else {
+    // Se a consulta falhou, exibir uma mensagem de erro
+    echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
+}
+
+$sql3 = "SELECT * FROM permissions";
+
+// Executar a consulta
+$result3 = mysqli_query($link, $sql3);
+
+// Verificar se a consulta foi bem-sucedida
+if ($result3) {
+    // Inicializar a variável $permissoes_geral como um array para armazenar os resultados
+    $permissoes_geral = array();
+
+    // Obter os resultados da consulta
+    while ($row = mysqli_fetch_assoc($result3)) {
+        // Adicionar cada linha ao array
+        $permissoes_geral[] = $row;
+    }
+
+    // Liberar o resultado da consulta
+    mysqli_free_result($result3);
+} else {
+    // Se a consulta falhou, exibir uma mensagem de erro
+    echo json_encode(array('error' => 'Erro na consulta: ' . mysqli_error($link)));
 }
 
 // Close connection
@@ -233,7 +277,7 @@ mysqli_close($link);
                         </div><!-- end card -->
                     </div><!-- end col -->
 
-                    <div class="col-xl-6">
+                    <div id="boxUsuarioSelecionado" class="col-xl-6">
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex align-items-start ">
@@ -254,15 +298,55 @@ mysqli_close($link);
                                                 <i class="bx bx-dots-horizontal-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end">
+                                                <a class="dropdown-item" href="#" onclick="editarUsuario()">Editar</a>
                                                 <a class="dropdown-item" href="#">Excluir</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div><!-- end card header-->
-
                             <div id="dadosUsuario" class="card-body">
                                 <!-- Dados do usuário selecionado -->
+                            </div><!-- end card-body -->
+                            <div id="editarUsuario" class="card-body">
+                                <div class="col-md-6">
+                                    <label for="empresas_geral">Selecione a empresa pra vincular:</label>
+                                    <select class="form-select" id="empresas_geral" name="empresas_geral">
+                                        <?php
+                                        // Verifica se uma empresa foi selecionada
+                                        if (isset($empresas_geral)) {
+                                            // Obtém os empresas_geral correspondentes à empresa selecionada
+                                            // $empresas_geral = $empresas_empresas_geral[$_POST['selectedEmpresa']];
+
+                                            // Exibe a lista de empresas_geral
+                                            foreach ($empresas_geral as $empresa) {
+                                                echo '<option value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
+                                            }
+                                        } else {
+                                            // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                            echo '<option value="">Selecione um usuário primeiro</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            
+                                <div class="col-md-6">
+                                    <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
+                                    <select class="form-select" id="permissoes_geral" name="permissoes_geral">
+                                        <?php
+                                        // Verifica se uma empresa foi selecionada
+                                        if (isset($permissoes_geral)) {
+                                            // Exibe a lista de permissoes_geral
+                                            foreach ($permissoes_geral as $permissao) {
+                                                echo '<option value="' . $permissao['id'] . '">' . $permissao['description'] . '</option>';
+                                            }
+                                        } else {
+                                            // Caso nenhuma permissao tenha sido selecionada ou a permissao selecionada não exista nos dados
+                                            echo '<option value="">Selecione um usuário primeiro</option>';
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
                             </div><!-- end card-body -->
                         </div><!-- end card -->
                     </div><!-- end col -->
@@ -303,6 +387,14 @@ mysqli_close($link);
 <script src="assets/js/app.js"></script>
 
 <script>
+var editaUsuario = document.getElementById('editarUsuario');
+// Inicialmente, ocultamos as edições
+editaUsuario.style.visibility = 'hidden';
+
+var boxUsuario = document.getElementById('boxUsuarioSelecionado');
+// Inicialmente, ocultamos as edições
+boxUsuario.style.visibility = 'hidden';
+
 function selecionarUsuario(Usuario, Permission) {
     var formData = new FormData();
     formData.append('selectedUsuario', Usuario);
@@ -330,6 +422,8 @@ function selecionarUsuario(Usuario, Permission) {
                             console.error("Erro ao fazer o parse JSON:", error);
                         }
                         atualizarUsusarioSelecionado(usuario_selecionado);
+                        // Exibe ou oculta a edição do uruário
+                        boxUsuario.style.visibility = this.value !== '' ? 'visible' : 'hidden';
                     } else {
                         console.error('Resposta JSON vazia ou inválida.');
                     }
@@ -347,6 +441,10 @@ function selecionarUsuario(Usuario, Permission) {
 function atualizarUsusarioSelecionado(usuario_selecionado) {
     const nomeUsuario = document.getElementById('nomeUsuario');
     nomeUsuario.innerHTML = '';
+
+    // Ocultamos as edições
+    editaUsuario.style.visibility = 'hidden';
+
 
     const nome = document.createElement('h5');
     nome.className = 'font-size-16 mb-1';
@@ -421,6 +519,15 @@ function atualizarUsusarioSelecionado(usuario_selecionado) {
     divEmpresas.appendChild(label);
     divEmpresas.appendChild(divCol);
     container.appendChild(divEmpresas);
+}
+
+function editarUsuario() {
+    // Seleciona o elemento onde você deseja adicionar as tags
+    var container = document.getElementById('dadosUsuario'); // Substitua 'seuContainer' pelo ID real do seu contêiner
+    // Limpa o conteúdo existente antes de adicionar novos campos
+    container.innerHTML = '';
+    // Exibe ou oculta a edição do uruário
+    editaUsuario.style.visibility = this.value !== '' ? 'visible' : 'hidden';
 }
 </script>
 
