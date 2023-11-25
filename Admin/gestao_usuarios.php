@@ -237,17 +237,14 @@ mysqli_close($link);
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex align-items-start ">
-                                    <div class="flex-shrink-0 me-3 align-self-center">
-                                        <img src="assets/images/users/avatar-1.jpg" class="avatar-sm rounded-circle" alt="">
-                                    </div>
+                                    <!-- <div class="flex-shrink-0 me-3 align-self-center">
+                                        <img src="assets/images/users/avatar-1.png" class="avatar-sm rounded-circle" alt="">
+                                    </div> -->
                                     
                                     <div class="flex-grow-1" id="nomeUsuario">
-                                        <!-- <h5 class="font-size-16 mb-1"><a href="#" class="text-dark">Usuário Teste</a></h5> -->
-                                        <!-- <p class="text-muted mb-0">Available</p> -->
+                                        <!-- Nome do usuário selecionado -->
                                         <div class="d-flex flex-wrap gap-2 mt-1" id="permissao">
-                                            <!-- <span class="badge rounded-pill bg-primary">Limitado</span>
-                                            <span class="badge rounded-pill bg-success">Geral</span>
-                                            <span class="badge rounded-pill bg-info">Admin</span> -->
+                                            <!-- Permissão do usuário selecionado -->
                                         </div>
                                     </div>
 
@@ -257,7 +254,6 @@ mysqli_close($link);
                                                 <i class="bx bx-dots-horizontal-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">Editar</a>
                                                 <a class="dropdown-item" href="#">Excluir</a>
                                             </div>
                                         </div>
@@ -266,52 +262,7 @@ mysqli_close($link);
                             </div><!-- end card header-->
 
                             <div id="dadosUsuario" class="card-body">
-
-                                <!-- <div class="row mb-4">
-                                    <label for="horizontal-primeiro-nome" class="col-sm-3 col-form-label">Primeiro Nome</label>
-                                    <div class="col-sm-9">
-                                        <p>Teste</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-ultimo-nome" class="col-sm-3 col-form-label">Último Nome</label>
-                                    <div class="col-sm-9">
-                                        <p>Limitado</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-email" class="col-sm-3 col-form-label">E-mail</label>
-                                    <div class="col-sm-9">
-                                        <p>teste1@teste.com</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-usuario" class="col-sm-3 col-form-label">Usuário</label>
-                                    <div class="col-sm-9">
-                                        <p>teste_limitado</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-cpf" class="col-sm-3 col-form-label">CPF</label>
-                                    <div class="col-sm-9">
-                                        <p>123456789-12</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-telefone" class="col-sm-3 col-form-label">Telefone</label>
-                                    <div class="col-sm-9">
-                                        <p>(11)99999-9999</p>
-                                    </div>
-                                </div>
-                                <div class="row mb-4">
-                                    <label for="horizontal-empresas-vinculadas" class="col-sm-3 col-form-label">Empresas vinculadas</label>
-                                    <div class="col-sm-9">
-                                        <div class="d-flex flex-wrap gap-2 mt-1">
-                                            <span class="badge rounded-pill bg-warning">Cria</span>
-                                            <span class="badge rounded-pill bg-danger">Faza</span>
-                                        </div>
-                                    </div>
-                                </div> -->
+                                <!-- Dados do usuário selecionado -->
                             </div><!-- end card-body -->
                         </div><!-- end card -->
                     </div><!-- end col -->
@@ -426,7 +377,7 @@ function atualizarUsusarioSelecionado(usuario_selecionado) {
 
         var label = document.createElement('label');
         label.className = 'col-sm-3 col-form-label';
-        label.textContent = propriedade.charAt(0).toUpperCase() + propriedade.slice(1); // Capitaliza a primeira letra
+        label.textContent = propriedade.charAt(0).toUpperCase() + propriedade.slice(1) + ":"; // Capitaliza a primeira letra
 
         var divCol = document.createElement('div');
         divCol.className = 'col-sm-9';
@@ -440,6 +391,36 @@ function atualizarUsusarioSelecionado(usuario_selecionado) {
         divRow.appendChild(divCol);
         container.appendChild(divRow);
     }
+    // Inicialize a variável empresas como uma string vazia
+    var empresas = '';
+
+    // Itere sobre o array a partir do índice 1
+    for (var i = 1; i < usuario_selecionado.length; i++) {
+    // Concatene o valor do atributo name à variável empresas
+    empresas += usuario_selecionado[i].name + ', ';
+    }
+
+    // Remova a vírgula extra no final, se houver
+    empresas = empresas.slice(0, -2);
+
+    var divEmpresas = document.createElement('div');
+    divEmpresas.className = 'row mb-4';
+
+    var label = document.createElement('label');
+    label.className = 'col-sm-3 col-form-label';
+    label.textContent = "Empresas vinculadas:"; // Capitaliza a primeira letra
+
+    var divCol = document.createElement('div');
+    divCol.className = 'col-sm-9';
+
+    var span = document.createElement('span');
+    span.textContent = empresas;
+
+    // Adiciona os elementos ao DOM
+    divCol.appendChild(span);
+    divEmpresas.appendChild(label);
+    divEmpresas.appendChild(divCol);
+    container.appendChild(divEmpresas);
 }
 </script>
 
