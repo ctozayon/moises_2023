@@ -339,48 +339,41 @@ mysqli_close($link);
                                 <!-- Dados do usuário selecionado -->
                             </div><!-- end card-body -->
                             <div id="editarUsuario" class="card-body">
-                            <form id="selecaoForm" method="post">
-                                <div class="col-md-6">
-                                    <label for="empresas_geral">Selecione a empresa para vincular:</label>
-                                    <select class="form-select" id="empresas_geral" name="empresas_geral">
-                                        <?php
-                                        // Verifica se uma empresa foi selecionada
-                                        if (isset($empresas_geral)) {
-                                            // Exibe a lista de empresas_geral
-                                            foreach ($empresas_geral as $empresa) {
-                                                echo '<option onclick="enviarPostEmpresa('. $empresa['id']. ')" value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
-                                            }
-                                        } else {
-                                            // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
-                                            echo '<option value="">Selecione um usuário primeiro</option>';
+                            <div class="col-md-6">
+                                <label for="empresas_geral">Selecione a empresa para vincular:</label>
+                                <select class="form-select" id="empresas_geral" name="empresas_geral">
+                                    <?php
+                                    // Verifica se uma empresa foi selecionada
+                                    if (isset($empresas_geral)) {
+                                        // Exibe a lista de empresas_geral
+                                        foreach ($empresas_geral as $empresa) {
+                                            echo '<option onclick="enviarPostEmpresa('. $empresa['id']. ')" value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
                                         }
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <!-- <div class="col-md-6">
-                                    <button type="button" onclick="enviarPostEmpresa()">Vincular Empresa</button>
-                                </div> -->
-                            </form>
+                                    } else {
+                                        // Caso nenhuma empresa tenha sido selecionada ou a empresa selecionada não exista nos dados
+                                        echo '<option value="">Selecione um usuário primeiro</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
+                                <select class="form-select" id="permissoes_geral" name="permissoes_geral">
+                                    <?php
+                                    // Verifica se uma empresa foi selecionada
+                                    if (isset($permissoes_geral)) {
+                                        // Exibe a lista de permissoes_geral
+                                        foreach ($permissoes_geral as $permissao) {
+                                            echo '<option value="' . $permissao['id'] . '">' . $permissao['description'] . '</option>';
+                                        }
+                                    } else {
+                                        // Caso nenhuma permissao tenha sido selecionada ou a permissao selecionada não exista nos dados
+                                        echo '<option value="">Selecione um usuário primeiro</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
                             
-                                <div class="col-md-6">
-                                    <label for="permissoes_geral">Selecione a permissão para esse usuário:</label>
-                                    <select class="form-select" id="permissoes_geral" name="permissoes_geral">
-                                        <?php
-                                        // Verifica se uma empresa foi selecionada
-                                        if (isset($permissoes_geral)) {
-                                            // Exibe a lista de permissoes_geral
-                                            foreach ($permissoes_geral as $permissao) {
-                                                echo '<option value="' . $permissao['id'] . '">' . $permissao['description'] . '</option>';
-                                            }
-                                        } else {
-                                            // Caso nenhuma permissao tenha sido selecionada ou a permissao selecionada não exista nos dados
-                                            echo '<option value="">Selecione um usuário primeiro</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-                            </div><!-- end card-body -->
                         </div><!-- end card -->
                     </div><!-- end col -->
                 </div><!-- end row -->
