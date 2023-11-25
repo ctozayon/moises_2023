@@ -1,6 +1,4 @@
 <?php
-// include 'layouts/session.php';
-// Include config file
 include 'layouts/config.php';
 session_start();
 
