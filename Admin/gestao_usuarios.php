@@ -213,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['selectedPermissionId'
             }
             // Executa a consulta
             if (mysqli_query($link, $sql)) {
+                $_SESSION['permission_id'] = $selectedPermissionId;
                 exit();
             } else {
                 // Se houver um erro na consulta, exibe uma mensagem de erro

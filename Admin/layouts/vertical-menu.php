@@ -57,6 +57,7 @@
 <?php 
 session_start(); 
 $empresas = $_SESSION['empresas'];
+$permission_id = $_SESSION['permission_id'];
 
 if (isset($empresas) && $empresas != ""){?>
 <!-- ========== Left Sidebar Start ========== -->
@@ -104,7 +105,9 @@ if (isset($empresas) && $empresas != ""){?>
                         </li>
                     </ul>
                 </li>
-
+                <?php 
+                if ($permission_id == 1 ) { 
+                ?>
                 <li>
                     <a href="javascript: void(0);" class="has-arrow" id="vertical-menu-administracao">
                         <i data-feather="sliders"></i>
@@ -127,6 +130,9 @@ if (isset($empresas) && $empresas != ""){?>
                         </li>
                     </ul>
                 </li>
+                <?php 
+                }
+                ?>
             </ul>
         </div>
         <!-- Sidebar -->
