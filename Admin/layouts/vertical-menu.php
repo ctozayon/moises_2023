@@ -91,6 +91,7 @@ if (isset($empresas) && $empresas != ""){?>
                             <ul class="sub-menu" aria-expanded="true">
                                 <li><a href="form-cadastrar_projetos.php" data-key="t-cadastrarProjetos"><?php echo $language["Cadastrar_Projetos"]; ?></a></li>
                                 <li><a href="exibir-projetos.php" data-key="t-exibirProjetos"><?php echo $language["Exibir_Projetos_Arquivos"]; ?></a></li>
+                                <li><a href="editar-projetos.php" data-key="t-editarProjetos"><?php echo $language["Editar_Projetos"]; ?></a></li>
                             </ul>
                         </li>
                         <?php

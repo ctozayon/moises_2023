@@ -3,6 +3,7 @@ $language['CargaDados'] = "Carga de Dados";
 $language['Projetos'] = "Projetos";
 $language['Cadastrar_Projetos'] = "Cadastrar projetos";
 $language['Exibir_Projetos_Arquivos'] = "Exibir projetos e arquivos";
+$language['Editar_Projetos'] = "Editar projetos";
 $language['Mosyni'] = "Mosýni";
 $language['Menu'] = "Menu";
 $language['Dashboard'] = "Dashboard";
