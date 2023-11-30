@@ -1,4 +1,5 @@
-<?php include 'layouts/session.php'; 
+<?php 
+include 'layouts/session.php'; 
 
 include 'layouts/config.php';
 
@@ -82,6 +83,9 @@ if (isset($empresas)) {
     <title>Gestão de Empresas</title>
     <?php include 'layouts/head.php'; ?>
     <?php include 'layouts/head-style.php'; ?>
+
+    <!-- flatpickr css -->
+    <!-- <link href="assets/libs/flatpickr/flatpickr.min.css" rel="stylesheet" type="text/css"> -->
 
     <!-- DataTables -->
     <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
@@ -225,17 +229,17 @@ if (isset($empresas)) {
 <?php include 'layouts/right-sidebar.php'; ?>
 <!-- /Right-bar -->
 
+<?php include 'layouts/vendor-scripts.php'; ?>
+
 <!-- JAVASCRIPT -->
-<script src="assets/libs/jquery/jquery.min.js"></script>
+<!-- <script src="assets/libs/jquery/jquery.min.js"></script>
 <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="assets/libs/simplebar/simplebar.min.js"></script>
 <script src="assets/libs/node-waves/waves.min.js"></script>
-<script src="assets/libs/feather-icons/feather.min.js"></script>
+<script src="assets/libs/feather-icons/feather.min.js"></script> -->
 <!-- pace js -->
 <script src="assets/libs/pace-js/pace.min.js"></script>
-
-<?php include 'layouts/vendor-scripts.php'; ?>
 
 <script src="assets/js/app.js"></script>
 
