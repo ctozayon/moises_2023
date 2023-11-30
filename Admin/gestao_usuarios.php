@@ -523,6 +523,9 @@ function atualizarUsusarioSelecionado(usuario_selecionado) {
     if (usuario_selecionado[0].Permissão != 'limitado') {
         vinculo_empresa.style.visibility = 'hidden';
     }
+    else{
+        vinculo_empresa.style.visibility = 'visible';
+    }
     
     console.log('Função atualizarUsusarioSelecionado chamada!');
     console.log('Usuário Selecionado:', usuario_selecionado);
