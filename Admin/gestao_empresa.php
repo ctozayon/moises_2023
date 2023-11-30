@@ -1,7 +1,8 @@
 <?php include 'layouts/session.php'; 
-session_start();
 
 include 'layouts/config.php';
+
+$empresas = $_SESSION['empresas'];
 
 // Se o formulário de detalhes do projeto foi enviado
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -111,7 +112,7 @@ if (isset($empresas)) {
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                             <h4 class="mb-sm-0 font-size-18">Gestão de Empresas</h4>
-
+                            
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="javascript: void(0);">Administração</a></li>
@@ -337,7 +338,7 @@ $(document).ready(function() {
     });
 });
 
-atualizarTabela(<?php echo $empresas ?>);
+atualizarTabela(<?php echo $empresas?>);
 
 document.getElementById('detalhesEmpresaForm').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -403,6 +404,8 @@ function atualizarTabela(empresas) {
 
         // Adicione os novos dados ao DataTable
         <?php
+        $empresas = $_SESSION['empresas'];
+
         if (isset($empresas)) {
             foreach ($empresas as $empresa) {
                 echo "dataTable.row.add([
