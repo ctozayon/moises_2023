@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['projetos'])) {
 
 <head>
 
-    <title>Novo projeto</title>
+    <title>Editar projeto</title>
     <?php include 'layouts/head.php'; ?>
     <?php include 'layouts/head-style.php'; ?>
 
@@ -243,12 +243,11 @@ $estados = array(
                                 <div class="row">
                                     <form id="detalhesProjetoForm">
                                         <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                            <label for="projetos">Selecione o projeto:</label>
-                                            <select class="form-select" id="projetos" name="projetos">
-                                                <!-- A opção padrão quando nenhum projeto está disponível -->
-                                                <option value="" disabled selected>Selecione uma empresa acima</option>
-                                            </select>
+                                        <div class="col-lg-4">
+                                                <div class="mb-3">
+                                                    <label for="example-date-input" class="form-label">Data de início planejada</label>
+                                                    <input class="form-control" type="date" value="2023-01-01" id="dataInicioPlanejada" name="dataInicioPlanejada">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
