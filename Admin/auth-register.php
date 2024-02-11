@@ -108,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Redirect to login page
                 header("location: index.php");
             } else {
-                echo "Algo está errado. Por favor tente novamente mais tarde.";
+                echo "Algo está errado. Por favor, tente novamente mais tarde.";
             }
 
             // Close statement
@@ -174,6 +174,41 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input type="text" class="form-control" id="lastname" placeholder="Insira seu último nome" required name="lastname" value="<?php echo $lastname; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $lastname_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="cpf" class="form-label">CPF</label>
+                                        <input type="text" class="form-control" id="cpf" placeholder="Insira seu último nome" required name="cpf" value="<?php echo $cpf; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $cpf_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="phone" class="form-label">Telefone</label>
+                                        <input type="text" class="form-control" id="phone" placeholder="Insira seu último nome" required name="phone" value="<?php echo $phone; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $phone_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="cep" class="form-label">CEP</label>
+                                        <input type="text" class="form-control" id="cep" placeholder="Insira seu último nome" required name="cep" value="<?php echo $cep; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $cep_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="address" class="form-label">Endereço</label>
+                                        <input type="text" class="form-control" id="address" placeholder="Insira seu último nome" required name="address" value="<?php echo $address; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $address_err; ?></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="birth_date" class="form-label">Data de Nascimento</label>
+                                        <input type="text" class="form-control" id="birth_date" placeholder="Insira seu último nome" required name="birth_date" value="<?php echo $birth_date; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $birth_date_err; ?></span>
                                     </div>
 
                                     <div class="mb-3 <?php echo (!empty($password_err)) ? 'has-error' : ''; ?>">

@@ -64,10 +64,57 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             // Store data in session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["user_id"] = $id;
+                            $_SESSION["useremail"] = $useremail;
                             $_SESSION["username"] = $username;
                             $_SESSION["firstname"] = $firstname;
+                            $_SESSION["cpf"] = $cpf;
+                            $_SESSION["phone"] = $phone;
+                            $_SESSION["cep"] = $cep;
+                            $_SESSION["address"] = $address;
+                            $_SESSION["birth_date"] = $birth_date;
+                            $_SESSION["lastname"] = $lastname;
                             $_SESSION["permission_id"] = $permission_id;
                             $_SESSION["permission"] = $permission;
+
+                            if ($_SESSION["permission_id"] == 1 || $_SESSION["permission_id"] == 2) {
+                                $sql = "SELECT * FROM company";
+                            } else {
+                                $sql = "SELECT C.id, C.name, C.cnpj, C.cep, C.address FROM company C
+                                left join company_user CU on C.id = CU.id_company
+                                WHERE CU.id_user = " . $_SESSION["user_id"];
+                            }
+                        
+                            // Executar a consulta
+                            $result1 = mysqli_query($link, $sql);
+                        
+                            // Verificar se a consulta foi bem-sucedida
+                            if ($result1) {
+                                // Inicializar a variável empresa como um array para armazenar os resultados
+                                $empresas = array();
+                                session_start();
+                        
+                                // Obter os resultados da consulta
+                                while ($row = mysqli_fetch_assoc($result1)) {
+                                    // Adicionar cada linha ao array
+                                    $empresas[] = $row;
+                                }
+                    
+                                if ($empresas){
+                                    $_SESSION["empresas"] = $empresas;
+                                }
+                                else{
+                                    $_SESSION["empresas"] = "";
+                                }
+                        
+                                // Liberar o resultado da consulta
+                                mysqli_free_result($result1);
+                        
+                                // Exibir o conteúdo da variável empresa (pode ser removido em produção)
+                                var_dump($empresas);
+                            } else {
+                                // Se a consulta falhou, exibir uma mensagem de erro
+                                echo "Erro na consulta: " . mysqli_error($link);
+                            }
 
                             // Redirect user to welcome page
                             header("location: index.php");
@@ -83,58 +130,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 echo "Oops! Algo de errado aconteceu. Por favor tente novamente mais tarde.";
             }
-
             // Close statement
             mysqli_stmt_close($stmt);
         }
-    }
-
-    if ($_SESSION["loggedin"] = true) {
-        // Consulta SQL
-
-        if ($_SESSION["permission_id"] == 1 || $_SESSION["permission_id"] == 2) {
-            $sql = "SELECT * FROM company";
-        } else {
-            $sql = "SELECT C.id, C.name FROM company C
-            left join company_user CU on C.id = CU.id_company
-            WHERE CU.id_user = " . $_SESSION["user_id"];
-        }
-    
-        // Executar a consulta
-        $result = mysqli_query($link, $sql);
-    
-        // Verificar se a consulta foi bem-sucedida
-        if ($result) {
-            // Inicializar a variável empresa como um array para armazenar os resultados
-            $empresas = array();
-            session_start();
-    
-            // Obter os resultados da consulta
-            while ($row = mysqli_fetch_assoc($result)) {
-                // Adicionar cada linha ao array
-                $empresas[] = $row;
-            }
-
-            if ($empresas){
-                $_SESSION["empresas"] = $empresas;
-            }
-            else{
-                $_SESSION["empresas"] = "";
-            }
-    
-            // Liberar o resultado da consulta
-            mysqli_free_result($result);
-    
-            // Exibir o conteúdo da variável empresa (pode ser removido em produção)
-            var_dump($empresas);
-        } else {
-            // Se a consulta falhou, exibir uma mensagem de erro
-            echo "Erro na consulta: " . mysqli_error($link);
-        }
-    }
-    
     // Close connection
     mysqli_close($link);
+    }
 }?>
 
 <?php include 'layouts/head-main.php'; ?>
