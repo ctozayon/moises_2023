@@ -59,7 +59,7 @@ if (isset($_SESSION['empresas']) && $_SESSION['empresas'] != ""){
                 <div class="row">
                     <div class="col-12">
                     <?php if (isset($empresas) && $empresas != ""){?>
-                        <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiNGZjNzNiOGYtOTg3MC00NmI0LWJjNjUtZDcwMmQ5ZTM3ZmRlIiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9&embedImagePlaceholder=true&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>
+                        <iframe title="Report Section" width="100%" height="800" src="https://app.powerbi.com/view?r=eyJrIjoiYTBjNzQ5NzMtYWU2OS00NTc0LWI2OTktYzNmZTZmM2Y5NmQ5IiwidCI6IjY5YzQxN2QzLWRmOTAtNGM4Yy05M2RjLTZlZTNmYWNiZDQyNCJ9" frameborder="0" allowFullScreen="true"></iframe>
                     <?php 
                     } else {?>
                         <div class="text-center mb-4">
