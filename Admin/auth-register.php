@@ -3,11 +3,12 @@
 require_once "layouts/config.php";
 
 // Define variables and initialize with empty values
-$useremail = $username = $firstname = $lastname = $password = $confirm_password = "";
-$useremail_err = $username_err = $firstname_err = $lastname_err = $password_err = $confirm_password_err = "";
+$useremail = $username = $firstname = $lastname = $password = $confirm_password = $cpf = $phone = $cep = $address = $birth_date = "";
+$useremail_err = $username_err = $firstname_err = $lastname_err = $password_err = $confirm_password_err = $cpf_err = "";
 
 // Processing form data when form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
 
     // Validate useremail
     if (empty(trim($_POST["useremail"]))) {
@@ -86,20 +87,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Check input errors before inserting in database
-    if (empty($useremail_err) && empty($username_err) && empty($firstname_err) && empty($lastname_err) && empty($password_err) && empty($confirm_password_err)) {
+    if (empty($useremail_err) && empty($username_err) && empty($firstname_err) && empty($lastname_err) && empty($password_err) && empty($confirm_password_err) && empty($cpf_err)) {
 
         // Prepare an insert statement
-        $sql = "INSERT INTO users (useremail, username, firstname, lastname, password, token) VALUES (?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (useremail, username, firstname, lastname, cpf, phone, cep, address, birth_date, password, token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         if ($stmt = mysqli_prepare($link, $sql)) {
             // Bind variables to the prepared statement as parameters
-            mysqli_stmt_bind_param($stmt, "ssssss", $param_useremail, $param_username, $param_firstname, $param_lastname, $param_password, $param_token);
+            mysqli_stmt_bind_param($stmt, "sssssssssss", $param_useremail, $param_username, $param_firstname, $param_lastname, $param_cpf, $param_phone, $param_cep, $param_address, $param_birth_date, $param_password, $param_token);
 
             // Set parameters
-            $param_useremail = $useremail;
-            $param_username = $username;
-            $param_firstname = $firstname;
-            $param_lastname = $lastname;
+            $param_useremail = trim($_POST["useremail"]);
+            $param_username = trim($_POST["username"]);
+            $param_firstname = trim($_POST["firstname"]);
+            $param_lastname = trim($_POST["lastname"]);
+            $param_cpf = trim($_POST["cpf"]);
+            $param_phone = trim($_POST["phone"]);
+            $param_cep = trim($_POST["cep"]);
+            $param_address = trim($_POST["address"]);
+            $param_birth_date = trim($_POST["birth_date"]);;
             $param_password = password_hash($password, PASSWORD_DEFAULT); // Creates a password hash
             $param_token = bin2hex(random_bytes(50)); // generate unique token
 
@@ -120,6 +126,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_close($link);
 }
 ?>
+
 <?php include 'layouts/head-main.php'; ?>
 
 <head>
@@ -178,35 +185,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                     <div class="mb-3">
                                         <label for="cpf" class="form-label">CPF</label>
-                                        <input type="text" class="form-control" id="cpf" placeholder="Insira seu último nome" required name="cpf" value="<?php echo $cpf; ?>">
+                                        <input type="text" class="form-control" id="cpf" placeholder="Insira seu CPF" required name="cpf" value="<?php echo $cpf; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $cpf_err; ?></span>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="phone" class="form-label">Telefone</label>
-                                        <input type="text" class="form-control" id="phone" placeholder="Insira seu último nome" required name="phone" value="<?php echo $phone; ?>">
+                                        <input type="text" class="form-control" id="phone" placeholder="Insira seu telefone" required name="phone" value="<?php echo $phone; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $phone_err; ?></span>
                                     </div>
 
+                                    <!-- <form method="get" action="."> -->
                                     <div class="mb-3">
                                         <label for="cep" class="form-label">CEP</label>
-                                        <input type="text" class="form-control" id="cep" placeholder="Insira seu último nome" required name="cep" value="<?php echo $cep; ?>">
+                                        <input type="text" class="form-control" id="cep" placeholder="Insira seu cep" required name="cep" value="<?php echo $cep; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $cep_err; ?></span>
+                                    </div>
+                                    <!-- </form> -->
+
+                                    <div class="mb-3">
+                                        <label for="numero" class="form-label">Número</label>
+                                        <input type="text" class="form-control" id="numero" placeholder="Insira o número" required name="numero" value="<?php echo $numero; ?>">
+                                        <!-- Adicionando uma mensagem de erro para validação -->
+                                        <span class="text-danger"><?php echo $numero_err; ?></span>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="address" class="form-label">Endereço</label>
-                                        <input type="text" class="form-control" id="address" placeholder="Insira seu último nome" required name="address" value="<?php echo $address; ?>">
+                                        <input type="text" class="form-control" id="address" required name="address" value="<?php echo $address; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $address_err; ?></span>
                                     </div>
 
                                     <div class="mb-3">
                                         <label for="birth_date" class="form-label">Data de Nascimento</label>
-                                        <input type="text" class="form-control" id="birth_date" placeholder="Insira seu último nome" required name="birth_date" value="<?php echo $birth_date; ?>">
+                                        <input type="text" class="form-control" id="birth_date" placeholder="Insira sua data de nascimento" required name="birth_date" value="<?php echo $birth_date; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $birth_date_err; ?></span>
                                     </div>
@@ -393,6 +409,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!-- validation init -->
 <script src="assets/js/pages/validation.init.js"></script>
+
+<!-- Adicionando JQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<!-- Adicionando Javascript -->
+<script>
+
+$(document).ready(function() {
+
+    function limpa_formulário_cep() {
+        // Limpa valores do formulário de cep.
+        $("#rua").val("");
+        $("#numero").val("");
+        $("#bairro").val("");
+        $("#cidade").val("");
+        $("#uf").val("");
+        $("#address").val("");
+    }
+
+    // Quando o campo cep perde o foco.
+    $("#cep").blur(function() {
+
+        // Nova variável "cep" somente com dígitos.
+        var cep = $(this).val().replace(/\D/g, '');
+
+        // Verifica se campo cep possui valor informado.
+        if (cep != "") {
+
+            // Expressão regular para validar o CEP.
+            var validacep = /^[0-9]{8}$/;
+
+            // Valida o formato do CEP.
+            if(validacep.test(cep)) {
+
+                // Preenche os campos com "..." enquanto consulta webservice.
+                $("#rua").val("...");
+                $("#numero").val("...");
+                $("#bairro").val("...");
+                $("#cidade").val("...");
+                $("#uf").val("...");
+                $("#address").val("...");
+
+                // Consulta o webservice viacep.com.br/
+                $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                    if (!("erro" in dados)) {
+                        // Atualiza os campos com os valores da consulta.
+                        $("#rua").val(dados.logradouro);
+                        $("#bairro").val(dados.bairro);
+                        $("#cidade").val(dados.localidade);
+                        $("#uf").val(dados.uf);
+
+                        // Adiciona um evento de escuta para o campo número.
+                        $("#numero").on('input', function() {
+                            // Atualiza dinamicamente o campo de endereço completo.
+                            $("#address").val(dados.logradouro + ", " + $(this).val() + ", " + dados.bairro + ", " + dados.localidade + " - " + dados.uf);
+                            console.log($("#address").val());
+                        });
+
+                        // Atualiza inicialmente o campo de endereço completo.
+                        $("#address").val(dados.logradouro + ", " + $("#numero").val() + ", " + dados.bairro + ", " + dados.localidade + " - " + dados.uf);
+                        console.log($("#address").val());
+                    } else {
+                        // CEP pesquisado não foi encontrado.
+                        limpa_formulário_cep();
+                        alert("CEP não encontrado.");
+                    }
+                });
+            } else {
+                // CEP é inválido.
+                limpa_formulário_cep();
+                alert("Formato de CEP inválido.");
+            }
+        } else {
+            // CEP sem valor, limpa formulário.
+            limpa_formulário_cep();
+        }
+    });
+});
+
+</script>
 
 </body>
 
