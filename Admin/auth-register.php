@@ -222,7 +222,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                     <div class="mb-3">
                                         <label for="birth_date" class="form-label">Data de Nascimento</label>
-                                        <input type="text" class="form-control" id="birth_date" placeholder="Insira sua data de nascimento" required name="birth_date" value="<?php echo $birth_date; ?>">
+                                        <input type="date" class="form-control" id="birth_date" placeholder="Insira sua data de nascimento" required name="birth_date" value="<?php echo $birth_date; ?>">
                                         <!-- Adicionando uma mensagem de erro para validação -->
                                         <span class="text-danger"><?php echo $birth_date_err; ?></span>
                                     </div>
@@ -421,22 +421,22 @@ $(document).ready(function() {
             if(validacep.test(cep)) {
 
                 // Preenche os campos com "..." enquanto consulta webservice.
-                $("#rua").val("...");
-                $("#numero").val("...");
-                $("#bairro").val("...");
-                $("#cidade").val("...");
-                $("#uf").val("...");
-                $("#address").val("...");
+                // $("#rua").val("...");
+                // $("#numero").val("...");
+                // $("#bairro").val("...");
+                // $("#cidade").val("...");
+                // $("#uf").val("...");
+                // $("#address").val("...");
 
                 // Consulta o webservice viacep.com.br/
                 $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
 
                     if (!("erro" in dados)) {
                         // Atualiza os campos com os valores da consulta.
-                        $("#rua").val(dados.logradouro);
-                        $("#bairro").val(dados.bairro);
-                        $("#cidade").val(dados.localidade);
-                        $("#uf").val(dados.uf);
+                        // $("#rua").val(dados.logradouro);
+                        // $("#bairro").val(dados.bairro);
+                        // $("#cidade").val(dados.localidade);
+                        // $("#uf").val(dados.uf);
 
                         // Adiciona um evento de escuta para o campo número.
                         $("#numero").on('input', function() {

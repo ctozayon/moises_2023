@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate credentials
     if (empty($username_err) && empty($password_err)) {
         // Prepare a select statement
-        $sql = "SELECT U.id, U.username, U.firstname, U.password, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
+        $sql = "SELECT U.id, U.useremail, U.username, U.firstname, U.lastname, U.cpf, U.phone, U.cep, U.address, U.birth_date, U.password, COALESCE(UP.permission_id, 3) as permission_id, COALESCE(P.description, 'limitado') as description
         FROM users U
         LEFT JOIN user_permissions UP ON U.id = UP.user_id
         LEFT JOIN permissions P ON UP.permission_id = P.id
@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Check if username exists, if yes then verify password
                 if (mysqli_stmt_num_rows($stmt) == 1) {
                     // Bind result variables
-                    mysqli_stmt_bind_result($stmt, $id, $username, $firstname, $hashed_password, $permission_id, $permission);
+                    mysqli_stmt_bind_result($stmt, $id, $useremail, $username, $firstname, $lastname, $cpf, $phone, $cep, $address, $birth_date , $hashed_password, $permission_id, $permission);
                     if (mysqli_stmt_fetch($stmt)) {
                         if (password_verify($password, $hashed_password)) {
                             // Password is correct, so start a new session
