@@ -242,14 +242,14 @@ $estados = array(
                             <div class="card-body p-4">
                                 <div class="row">
                                     <form id="detalhesProjetoForm">
-                                        <div class="row">
+                                        <!-- <div class="row">
                                         <div class="col-lg-4">
                                                 <div class="mb-3">
                                                     <label for="example-date-input" class="form-label">Data de início planejada</label>
                                                     <input class="form-control" type="date" value="2023-01-01" id="dataInicioPlanejada" name="dataInicioPlanejada">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="row">
                                             <div class="col-lg-4">
                                                 <div class="mb-3">
