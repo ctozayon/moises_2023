@@ -222,6 +222,182 @@ if (isset($_POST['selectedProjeto'])) {
                                 </div>
                             </div><!-- end card-body -->
                         </div><!-- end card -->
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 class="card-title">Detalhes do projeto</h4>
+                                        <p class="card-title-desc">Veja detalhes do projeto e sub-projetos nos campos abaixo.</p>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <div class="row">
+                                            <form id="detalhesProjetoForm">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-3">
+                                                        <label for="label_projeto">Projeto selecionado: </label>
+                                                        <button type="button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled>Show Simone Matos</button>
+                                                        <!-- <span class="badge rounded-pill badge-soft-primary">Selecione o projeto no quadro anterior para exibir aqui</span> -->
+                                                    <!-- <label for="projeto_selecionado">Selecione o projeto para exibir o nome aqui</label> -->
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="label_projeto">Turnês cadastradas para este projeto (selecione para exibir detalhes nos campos abaixo): </label>
+                                                    </div>
+                                                    <div class="col-md-12 mb-5">
+                                                        <button type="button" class="btn btn-soft-success btn-rounded waves-effect waves-light">Turnê Centro-Canasvieiras-SC-01/01/23-01/02/23</button>
+                                                        <button type="button" class="btn btn-soft-success btn-rounded waves-effect waves-light">Turnê Centro Histórico-Diamantina-MG-10/02/23-25/02/23</button>
+                                                        <button type="button" class="btn btn-soft-success btn-rounded waves-effect waves-light">Turnê Zona Norte-Maringá-PR-25/06/23-18/07/23</button>
+                                                        <button type="button" class="btn btn-soft-success btn-rounded waves-effect waves-light">Turnê Bandeirantes-São Luis-MA-12/10/23-22/11/23</button>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-date-input" class="form-label">Data de início planejada</label>
+                                                            <input class="form-control" type="date" value="2023-01-01" id="dataInicioPlanejada" name="dataInicioPlanejada" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-date-input" class="form-label">Data de início executada</label>
+                                                            <input class="form-control" type="date" value="2023-01-01" id="dataInicioExecutada" name="dataInicioExecutada" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-date-input" class="form-label">Data de término</label>
+                                                            <input class="form-control" type="date" value="2023-01-01" id="dataTermino" name="dataTermino" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-2">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Estado</label>
+                                                            <select class="form-select" id="estado" name="estado" disabled>
+                                                                <?php
+                                                                foreach ($estados as $estado) { ?>
+                                                                    <option> <?php echo $estado ?> </option>
+                                                                <?php } ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Cidade</label>
+                                                            <input class="form-control" type="text" id="cidade" name="cidade" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-5">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Bairro</label>
+                                                            <input class="form-control" type="text" id="bairro" name="bairro" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Quantidade de pessoas envolvidas na produção</label>
+                                                            <input class="form-control" type="text" id="qtddPessoasProducao" name="qtddPessoasProducao" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Quantidade de funções envolvidas na produção</label>
+                                                            <input class="form-control" type="text" id="qtddFuncoesProducao" name="qtddFuncoesProducao" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Público estimado</label>
+                                                            <input class="form-control" type="text" id="publicoEstimado" name="publicoEstimado" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-center">
+                                                    <div class="col-lg-auto">
+                                                        <div class="mt-4">
+                                                            <div class="mb-3">
+                                                                <label for="example-text-input" class="form-label">Remuneração média das pessoas envolvidas na produção</label>
+                                                                <input class="form-control" type="text" id="remuneracaoMedia" name="remuneracaoMedia" disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Custo estimado do projeto</label>
+                                                            <input class="form-control" type="text" id="custoEstimadoProjeto" name="custoEstimadoProjeto" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="mb-3">
+                                                            <label for="example-text-input" class="form-label">Custo executado no projeto</label>
+                                                            <input class="form-control" type="text" id="custoExecutadoProjeto" name="custoExecutadoProjeto" disabled>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row justify-content-end">
+                                                    <div class="col-lg-auto">
+                                                        <div class="mt-4">
+                                                            <button type="button" class="btn btn-danger w-lg" data-bs-toggle="modal" data-bs-target="#modalExcluirProjeto">Excluir projeto</button>
+                                                            <div id="modalExcluirProjeto" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="myModalLabel">Deseja excluir o projeto?</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">                                                                            
+                                                                            <p>Confirmando a exclusão do projeto,
+                                                                                todas as informações referentes ao projeto serão deletadas
+                                                                                e arquivos referentes a estes projetos também serão removidos do banco.</p>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Cancelar</button>
+                                                                            <button type="button" class="btn btn-danger waves-effect waves-light">Excluir permanentemente!</button>
+                                                                        </div>
+                                                                    </div><!-- /.modal-content -->
+                                                                </div><!-- /.modal-dialog -->
+                                                            </div><!-- /.modal -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-auto">
+                                                        <div class="mt-4">
+                                                            <button type="button" class="btn btn-danger w-lg" data-bs-toggle="modal" data-bs-target="#modalExcluirTurne">Excluir turnê</button>
+                                                            <div id="modalExcluirTurne" class="modal fade" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true" data-bs-scroll="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="myModalLabel">Deseja excluir a turnê?</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">                                                                            
+                                                                            <p>Confirmando a exclusão da turnê,
+                                                                                todas as informações referentes
+                                                                                à turnê serão deletadas do banco.</p>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary waves-effect" data-bs-dismiss="modal">Cancelar</button>
+                                                                            <button type="button" class="btn btn-danger waves-effect waves-light">Excluir permanentemente!</button>
+                                                                        </div>
+                                                                    </div><!-- /.modal-content -->
+                                                                </div><!-- /.modal-dialog -->
+                                                            </div><!-- /.modal -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end col -->
+                        </div>
+
                     </div><!-- end col --> 
                 </div><!-- end row -->
             </div>
@@ -243,6 +419,9 @@ if (isset($_POST['selectedProjeto'])) {
 <!-- /Right-bar -->
 
 <!-- JAVASCRIPT -->
+<?php include 'layouts/vendor-scripts.php'; ?>
+
+<script src="assets/js/app.js"></script>
 <script src="assets/libs/jquery/jquery.min.js"></script>
 <script src="assets/libs/metismenu/metisMenu.min.js"></script>
 <script src="assets/libs/simplebar/simplebar.min.js"></script>
