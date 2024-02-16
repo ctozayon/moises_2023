@@ -1,3 +1,4 @@
 # Ignorar arquivos de dependências gerados pelo Composer
 /vendor/
 Admin/layouts/config.php
+/var/www/moises_2023/Admin/vendor/.htaccess
