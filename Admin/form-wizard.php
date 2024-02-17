@@ -364,7 +364,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
         // Inicialmente, ocultamos o botão
         nextButton.style.visibility = 'hidden';
 
-        selectProjetos.addEventListener('change', function () {
+        selectProjetos.addEventListener('focus', function () {
             console.log('Projeto Selecionado: ' + this.value);
 
             // Envia o formulário via AJAX
