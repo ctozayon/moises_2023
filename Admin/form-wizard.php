@@ -323,7 +323,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                 var nextButton = document.querySelector('.pager li.next');
                 // Inicialmente, ocultamos o botão
                 nextButton.style.visibility = 'hidden';
-                
+
                 // Envia o formulário via AJAX
                 var formData = new FormData();
                 formData.append('selectedEmpresa', this.value);
@@ -364,7 +364,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
         // Adiciona evento de mudança nos selects
         var selectProjetos = document.getElementById('projetos');
         var nextButton = document.querySelector('.pager li.next');
-        var empresaForm = document.getElementById('empresaForm');
+        
         // Inicialmente, ocultamos o botão
         nextButton.style.visibility = 'hidden';
 
