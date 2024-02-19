@@ -320,6 +320,9 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
             radio.addEventListener('change', function () {
                 var projetosLabel = this.nextElementSibling;
                 var projetos = projetosLabel.getAttribute('data-projetos');
+                var nextButton = document.querySelector('.pager li.next');
+                // Inicialmente, ocultamos o botão
+                nextButton.style.visibility = 'hidden';
                 
                 // Envia o formulário via AJAX
                 var formData = new FormData();
@@ -361,6 +364,7 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
         // Adiciona evento de mudança nos selects
         var selectProjetos = document.getElementById('projetos');
         var nextButton = document.querySelector('.pager li.next');
+        var empresaForm = document.getElementById('empresaForm');
         // Inicialmente, ocultamos o botão
         nextButton.style.visibility = 'hidden';
 
@@ -377,7 +381,10 @@ if (isset($_POST['selectedEmpresa']) && $_POST['selectedEmpresa'] != "null" && !
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     // Lida com a resposta
                     handleResponse(xhr.responseText);
-
+                   }
+                
+                // Se existir uma empresa selecionada, exibe o botão
+                if (projetos.value){
                     // Exibe ou oculta o botão com base na seleção do projeto
                     nextButton.style.visibility = this.value !== '' ? 'visible' : 'hidden';
                 }
